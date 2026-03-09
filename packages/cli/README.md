@@ -1,5 +1,7 @@
 # tailwind-architect
 
+![Tailwind Architect](logo.png)
+
 **CLI for analyzing and fixing Tailwind CSS classes** — sort utilities, remove redundant classes, detect conflicts, and apply optimizations across your codebase. Uses an AST-first engine that understands Tailwind v3/v4 and supports JSX, Vue, Astro, and Svelte.
 
 Part of the [Tailwind Architect](https://github.com/vitoriowingert/tailwind-architect) toolchain. Use this CLI for CI, scripts, and batch fixes; use the [VS Code / Cursor extension](https://marketplace.visualstudio.com/) for in-editor diagnostics and quick fixes.
