@@ -9,13 +9,21 @@ function extractFromFragment(code: string, offset: number): ClassStringSpan[] {
     const value = m[1];
     if (value.trim().length === 0) continue;
     const valueStart = offset + m.index + m[0].indexOf(value);
-    spans.push({ start: valueStart, end: valueStart + value.length, classString: value });
+    spans.push({
+      start: valueStart,
+      end: valueStart + value.length,
+      classString: value
+    });
   }
   while ((m = classSingle.exec(code)) !== null) {
     const value = m[1];
     if (value.trim().length === 0) continue;
     const valueStart = offset + m.index + m[0].indexOf(value);
-    spans.push({ start: valueStart, end: valueStart + value.length, classString: value });
+    spans.push({
+      start: valueStart,
+      end: valueStart + value.length,
+      classString: value
+    });
   }
   return spans;
 }

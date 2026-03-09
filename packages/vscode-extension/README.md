@@ -52,23 +52,24 @@ The extension uses your workspace root to resolve config and Tailwind. A single-
 
 ### Commands (Command Palette: `Ctrl+Shift+P` / `Cmd+Shift+P`)
 
-| Command | Description |
-|--------|-------------|
-| **Tailwind Architect: Fix Classes** | Fix the currently active file (sort, remove redundant, apply suggestions). |
-| **Tailwind Architect: Fix Workspace** | Fix all supported files in the workspace. Shows progress and a summary. |
+| Command                               | Description                                                                |
+| ------------------------------------- | -------------------------------------------------------------------------- |
+| **Tailwind Architect: Fix Classes**   | Fix the currently active file (sort, remove redundant, apply suggestions). |
+| **Tailwind Architect: Fix Workspace** | Fix all supported files in the workspace. Shows progress and a summary.    |
 
 ### Code actions (Quick fix)
 
 In supported files, when the extension reports issues, use the lightbulb or **Quick Fix** (`Ctrl+.` / `Cmd+.`) and choose **Tailwind Architect: Fix Classes**.
 
-### Settings
+### Settings (configuration options)
 
-Open **Settings** (`Ctrl+,` / `Cmd+,`) and search for **Tailwind Architect**.
+Open **Settings** (`Ctrl+,` / `Cmd+,`) and search for **Tailwind Architect**. All options are defined under the extension's `contributes.configuration` and can be edited in `settings.json`.
 
-| Setting | Type | Default | Description |
-|--------|------|--------|-------------|
-| **Tailwind Architect: Format On Save** | `boolean` | `false` | Run the fix when you save a supported file. |
-| **Tailwind Architect: Diagnostics At Span Level** | `boolean` | `false` | Show one diagnostic per class string (with range) instead of one per file. Useful for large files. |
+| Setting                                    | Type      | Default | Description                                                                                        |
+| ------------------------------------------ | --------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `tailwindArchitect.formatOnSave`           | `boolean` | `false` | Run the fix when you save a supported file.                                                        |
+| `tailwindArchitect.diagnosticsAtSpanLevel` | `boolean` | `false` | Show one diagnostic per class string (with range) instead of one per file. Useful for large files. |
+| `tailwindArchitect.fixWorkspaceMaxFiles`   | `number`  | `5000`  | Max files to process when running Fix Workspace. `0` = no limit. Reduces UI freeze on large repos. |
 
 ---
 

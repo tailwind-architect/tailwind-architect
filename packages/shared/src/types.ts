@@ -29,6 +29,11 @@ export type DuplicatePattern = {
   filePaths: string[];
 };
 
+export type LogEntry = {
+  level: "info" | "warn";
+  message: string;
+};
+
 export type ProjectAnalysis = {
   filesScanned: number;
   filesWithIssues: number;
@@ -39,4 +44,10 @@ export type ProjectAnalysis = {
   parseErrors: FileParseError[];
   perFile: FileIssue[];
   duplicatePatterns?: DuplicatePattern[];
+  /** When true, only the first `filesLimit` files were processed (maxFiles option). */
+  truncated?: boolean;
+  /** When truncated is true, this is the max files limit that was applied. */
+  filesLimit?: number;
+  /** Structured log entries (info/warn) for the run. */
+  log?: LogEntry[];
 };

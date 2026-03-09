@@ -31,7 +31,9 @@ describe("extension flow integration", () => {
 
   it("loadTailwindContext returns context or null without throwing", async () => {
     const ctx = await loadTailwindContext(fixtureDir);
-    expect(ctx === null || (typeof ctx === "object" && "projectRoot" in ctx)).toBe(true);
+    expect(
+      ctx === null || (typeof ctx === "object" && "projectRoot" in ctx)
+    ).toBe(true);
     if (ctx) {
       expect(typeof ctx.configPath).toBe("string");
       expect(typeof ctx.configHash).toBe("string");
@@ -67,7 +69,9 @@ describe("extension flow integration", () => {
     const config = await loadArchitectConfig(fixtureDir);
     const tailwindContext = await loadTailwindContext(fixtureDir);
     const code = await readFile(join(fixtureDir, "Button.tsx"), "utf8");
-    const nodes = extractClassNodesFromSource(code, config, { tailwindContext });
+    const nodes = extractClassNodesFromSource(code, config, {
+      tailwindContext
+    });
     expect(Array.isArray(nodes)).toBe(true);
   });
 

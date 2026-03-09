@@ -57,11 +57,11 @@ pnpm add tailwind-architect
 
 ## Commands
 
-| Command     | Description |
-|------------|-------------|
-| `analyze`  | Scan the project and print a human-readable report (default if no command is given). |
-| `fix`      | Apply fixes: sort classes, remove redundant utilities, apply suggestions. Writes changes to disk (use `--dry-run` to preview). |
-| `lint`     | Same scan as `analyze`, but exits with code `1` when any issue is found (for CI). |
+| Command   | Description                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `analyze` | Scan the project and print a human-readable report (default if no command is given).                                           |
+| `fix`     | Apply fixes: sort classes, remove redundant utilities, apply suggestions. Writes changes to disk (use `--dry-run` to preview). |
+| `lint`    | Same scan as `analyze`, but exits with code `1` when any issue is found (for CI).                                              |
 
 You can pass a path to scan a specific directory instead of the current working directory:
 
@@ -74,12 +74,12 @@ npx tailwind-architect lint ./apps/web
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `[path]` | Directory to scan. Default: current directory (`.`). |
-| `--max-workers N` | Maximum number of concurrent file operations. Default: number of CPUs. Tune for large repos. |
-| `--dry-run` | (**fix** only) Compute and report changes but do **not** write files. |
-| `--report json` | Output a machine-readable JSON report instead of the human-readable summary. Useful for scripts and tooling. |
+| Option            | Description                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ |
+| `[path]`          | Directory to scan. Default: current directory (`.`).                                                         |
+| `--max-workers N` | Maximum number of concurrent file operations. Default: number of CPUs. Tune for large repos.                 |
+| `--dry-run`       | (**fix** only) Compute and report changes but do **not** write files.                                        |
+| `--report json`   | Output a machine-readable JSON report instead of the human-readable summary. Useful for scripts and tooling. |
 
 ### Example: JSON report
 
@@ -87,7 +87,7 @@ npx tailwind-architect lint ./apps/web
 npx tailwind-architect analyze --report json
 ```
 
-The JSON includes: `command`, `filesScanned`, `filesWithIssues`, `conflictCount`, `redundancyCount`, `suggestionCount`, `parseErrorCount`, `parseErrors`, `perFile`, `duplicatePatterns`, and for `fix`: `changedFiles`.
+The JSON includes: `command`, `filesScanned`, `filesWithIssues`, `conflictCount`, `redundancyCount`, `suggestionCount`, `parseErrorCount`, `parseErrors`, `perFile`, `duplicatePatterns`, `truncated`, `filesLimit`, `log` (array of `{ level, message }`), and for `fix`: `changedFiles`.
 
 ---
 
@@ -120,15 +120,15 @@ Optional: add **`tailwind-architect.config.json`** at your **project root** (sam
 }
 ```
 
-| Option | Default | Description |
-|--------|--------|-------------|
-| `sortClasses` | `true` | Apply semantic sort order to classes. |
-| `removeRedundant` | `true` | Remove overridden/redundant utilities. |
-| `detectConflicts` | `true` | Report conflicting utilities. |
-| `readabilityMode` | `false` | Break long class lists across lines for readability. |
-| `autoFix` | `true` | Apply optimization suggestions when running **fix**. |
-| `classFunctions` | `["clsx", "cn", "cva", "tw"]` | Function names whose arguments are treated as class strings (for extraction and fixing). |
-| `plugins` | `[]` | Optional list of Tailwind Architect plugin package names. |
+| Option            | Default                       | Description                                                                              |
+| ----------------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `sortClasses`     | `true`                        | Apply semantic sort order to classes.                                                    |
+| `removeRedundant` | `true`                        | Remove overridden/redundant utilities.                                                   |
+| `detectConflicts` | `true`                        | Report conflicting utilities.                                                            |
+| `readabilityMode` | `false`                       | Break long class lists across lines for readability.                                     |
+| `autoFix`         | `true`                        | Apply optimization suggestions when running **fix**.                                     |
+| `classFunctions`  | `["clsx", "cn", "cva", "tw"]` | Function names whose arguments are treated as class strings (for extraction and fixing). |
+| `plugins`         | `[]`                          | Optional list of Tailwind Architect plugin package names.                                |
 
 If the file is missing, the CLI uses the defaults above. Tailwind config is resolved from your project (e.g. `tailwind.config.*`); CSS-only setups (e.g. Tailwind v4 with only `@config` in CSS) work with default behavior.
 

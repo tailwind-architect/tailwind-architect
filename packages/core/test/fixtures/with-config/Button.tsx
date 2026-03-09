@@ -19,5 +19,9 @@ export function Button({ variant = "primary", children }: ButtonProps) {
       "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-500 p-4 pt-4"
   };
   const className = `${base} ${variants[variant]}`;
-  return <button type="button" className={className}>{children}</button>;
+  return (
+    <button type="button" className={className}>
+      {children}
+    </button>
+  );
 }

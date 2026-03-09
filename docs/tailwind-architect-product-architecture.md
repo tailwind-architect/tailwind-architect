@@ -5,15 +5,15 @@ Architect** as a production-grade developer tool.
 
 It describes:
 
--   monorepo structure
--   package responsibilities
--   internal engine APIs
--   extension architecture
--   CLI architecture
--   data flow between components
--   scalability considerations
+- monorepo structure
+- package responsibilities
+- internal engine APIs
+- extension architecture
+- CLI architecture
+- data flow between components
+- scalability considerations
 
-------------------------------------------------------------------------
+---
 
 # 1. High-Level Architecture
 
@@ -30,7 +30,7 @@ source code ↓ core engine (analysis + transformation) ↓ interfaces ├ CLI
 
 The **core engine must remain framework-agnostic**.
 
-------------------------------------------------------------------------
+---
 
 # 2. Monorepo Structure
 
@@ -41,7 +41,7 @@ tailwind-architect │ ├ packages │ │ ├ core │ │ Tailwind analysis e
 Cursor extension │ │ └ shared │ shared utilities and types │ ├ examples
 ├ docs └ website
 
-------------------------------------------------------------------------
+---
 
 # 3. Core Engine Responsibilities
 
@@ -51,20 +51,20 @@ Package:
 
 Responsibilities:
 
--   AST parsing
--   class extraction
--   tokenization
--   variant parsing
--   Tailwind utility resolution
--   redundancy detection
--   conflict detection
--   optimization suggestions
--   semantic sorting
--   AST rewriting
+- AST parsing
+- class extraction
+- tokenization
+- variant parsing
+- Tailwind utility resolution
+- redundancy detection
+- conflict detection
+- optimization suggestions
+- semantic sorting
+- AST rewriting
 
 The engine must expose a **clean API** used by CLI and extensions.
 
-------------------------------------------------------------------------
+---
 
 # 4. Core Engine API
 
@@ -76,7 +76,7 @@ Returns:
 
 { sortedClasses conflicts redundancies suggestions }
 
-------------------------------------------------------------------------
+---
 
 Example source analysis:
 
@@ -86,7 +86,7 @@ Returns:
 
 { modifiedSource diagnostics statistics }
 
-------------------------------------------------------------------------
+---
 
 # 5. CLI Architecture
 
@@ -96,10 +96,10 @@ tailwind-architect (CLI)
 
 Responsibilities:
 
--   project scanning
--   batch processing
--   concurrency control
--   reporting
+- project scanning
+- batch processing
+- concurrency control
+- reporting
 
 Commands:
 
@@ -110,7 +110,7 @@ Example usage:
 
 tailwind-architect analyze ./src
 
-------------------------------------------------------------------------
+---
 
 # 6. Extension Architecture
 
@@ -125,16 +125,16 @@ Cursor IDE
 
 Features:
 
--   command palette actions
--   inline diagnostics
--   quick fixes
--   format-on-save
+- command palette actions
+- inline diagnostics
+- quick fixes
+- format-on-save
 
 Example command:
 
 Tailwind Architect: Fix Classes
 
-------------------------------------------------------------------------
+---
 
 # 7. Data Flow
 
@@ -148,7 +148,7 @@ CLI flow:
 project scan ↓ file batching ↓ core engine analyzeSource ↓ aggregate
 results ↓ report output
 
-------------------------------------------------------------------------
+---
 
 # 8. Configuration System
 
@@ -164,7 +164,7 @@ Example:
 
 Config should be loaded per workspace root.
 
-------------------------------------------------------------------------
+---
 
 # 9. Tailwind Integration
 
@@ -183,7 +183,7 @@ Tailwind v3\
 Tailwind v4\
 future versions
 
-------------------------------------------------------------------------
+---
 
 # 10. Performance Architecture
 
@@ -197,16 +197,16 @@ Examples:
 
 Optimization techniques:
 
--   Tailwind context caching
--   AST reuse
--   worker thread processing
--   batched scanning
+- Tailwind context caching
+- AST reuse
+- worker thread processing
+- batched scanning
 
 Cache key:
 
 projectRoot + tailwindConfigHash
 
-------------------------------------------------------------------------
+---
 
 # 11. Safety Strategy
 
@@ -221,7 +221,7 @@ These must be skipped.
 
 Transformations must always occur via AST nodes.
 
-------------------------------------------------------------------------
+---
 
 # 12. Plugin Architecture
 
@@ -233,11 +233,11 @@ tailwind-architect-plugin
 
 Plugins may provide:
 
--   custom lint rules
--   custom sorting rules
--   design system enforcement
+- custom lint rules
+- custom sorting rules
+- design system enforcement
 
-------------------------------------------------------------------------
+---
 
 # 13. Testing Strategy
 
@@ -249,19 +249,19 @@ Integration tests Full JSX / component analysis
 
 Performance tests Large repositories
 
-------------------------------------------------------------------------
+---
 
 # 14. Documentation Strategy
 
 Required documentation:
 
--   installation guide
--   CLI usage
--   extension usage
--   configuration guide
--   troubleshooting
+- installation guide
+- CLI usage
+- extension usage
+- configuration guide
+- troubleshooting
 
-------------------------------------------------------------------------
+---
 
 # 15. Release Pipeline
 
@@ -272,7 +272,7 @@ Suggested release flow:
 3.  update docs
 4.  release GitHub tag
 
-------------------------------------------------------------------------
+---
 
 # 16. Long-Term System Vision
 
@@ -288,7 +288,7 @@ Prettier → code formatting
 
 Tailwind Architect → Tailwind optimization
 
-------------------------------------------------------------------------
+---
 
 # Final Architecture Goal
 

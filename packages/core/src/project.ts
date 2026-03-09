@@ -15,13 +15,31 @@ import type { AnalyzerConfig, ProjectAnalysis } from "./types.js";
 const DEFAULT_MAX_PER_FILE_ENTRIES = 2000;
 
 function getSourceExtensions(): Set<string> {
-  if (SOURCE_EXTENSIONS && typeof SOURCE_EXTENSIONS.has === "function") return SOURCE_EXTENSIONS;
-  return new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue", ".astro", ".svelte"]);
+  if (SOURCE_EXTENSIONS && typeof SOURCE_EXTENSIONS.has === "function")
+    return SOURCE_EXTENSIONS;
+  return new Set([
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".mjs",
+    ".cjs",
+    ".vue",
+    ".astro",
+    ".svelte"
+  ]);
 }
 
 function getIgnoreDirs(): Set<string> {
   if (IGNORE_DIRS && typeof IGNORE_DIRS.has === "function") return IGNORE_DIRS;
-  return new Set(["node_modules", ".git", "dist", "coverage", ".next", ".turbo"]);
+  return new Set([
+    "node_modules",
+    ".git",
+    "dist",
+    "coverage",
+    ".next",
+    ".turbo"
+  ]);
 }
 
 type AnalyzeProjectOptions = {
@@ -32,6 +50,8 @@ type AnalyzeProjectOptions = {
   maxWorkers?: number;
   dryRun?: boolean;
   maxPerFileEntries?: number;
+  /** When set, only process the first N source files (for large workspaces). */
+  maxFiles?: number;
 };
 
 type AnalyzeProjectResult = {
@@ -91,7 +111,11 @@ type WorkerResult = {
   output: {
     code: string;
     changed: boolean;
-    stats: { conflictCount: number; redundancyCount: number; suggestionCount: number };
+    stats: {
+      conflictCount: number;
+      redundancyCount: number;
+      suggestionCount: number;
+    };
     classStrings?: string[];
   } | null;
   error?: unknown;
@@ -178,14 +202,33 @@ async function runWithWorkers(
   });
 }
 
-export async function analyzeProject(options: AnalyzeProjectOptions): Promise<AnalyzeProjectResult> {
+export async function analyzeProject(
+  options: AnalyzeProjectOptions
+): Promise<AnalyzeProjectResult> {
   const report = emptyProjectAnalysis();
   const changedFiles: string[] = [];
   const concurrency = Math.max(
     1,
     options.concurrency ?? options.maxWorkers ?? cpus().length
   );
-  const files = await collectSourceFiles(options.rootDir);
+  let files = await collectSourceFiles(options.rootDir);
+  report.log!.push({
+    level: "info",
+    message: `Collected ${files.length} source file(s)`
+  });
+  if (
+    options.maxFiles != null &&
+    options.maxFiles > 0 &&
+    files.length > options.maxFiles
+  ) {
+    files = files.slice(0, options.maxFiles);
+    report.truncated = true;
+    report.filesLimit = options.maxFiles;
+    report.log!.push({
+      level: "warn",
+      message: `Truncated to first ${files.length} file(s) (maxFiles option)`
+    });
+  }
   report.filesScanned = files.length;
   const maxPerFile = options.maxPerFileEntries ?? DEFAULT_MAX_PER_FILE_ENTRIES;
   const dryRun = options.dryRun === true;
@@ -197,20 +240,25 @@ export async function analyzeProject(options: AnalyzeProjectOptions): Promise<An
     try {
       const dir = dirname(filePath);
       const tailwindContext = await loadTailwindContext(dir);
-      const plugins =
-        options.config.plugins?.length ?
-          await loadPlugins(dir, options.config.plugins) :
-          undefined;
+      const plugins = options.config.plugins?.length
+        ? await loadPlugins(dir, options.config.plugins)
+        : undefined;
       const adapter = getAdapterForExtension(extname(filePath));
       if (adapter) {
         const spans = await adapter(filePath, code);
-        const prefix =
-          (tailwindContext?.resolvedConfig as { prefix?: string } | undefined)?.prefix;
-        const result = await analyzeSourceWithAdapter(code, options.config, spans, {
-          tailwindPrefix: prefix,
-          applyFixes: options.mode === "fix" && options.config.autoFix,
-          plugins
-        });
+        const prefix = (
+          tailwindContext?.resolvedConfig as { prefix?: string } | undefined
+        )?.prefix;
+        const result = await analyzeSourceWithAdapter(
+          code,
+          options.config,
+          spans,
+          {
+            tailwindPrefix: prefix,
+            applyFixes: options.mode === "fix" && options.config.autoFix,
+            plugins
+          }
+        );
         return {
           filePath,
           output: { ...result, classStrings: spans.map((s) => s.classString) }
@@ -225,7 +273,12 @@ export async function analyzeProject(options: AnalyzeProjectOptions): Promise<An
       const classStrings = output.classNodes.map((n) => n.rawString);
       return {
         filePath,
-        output: { code: output.code, changed: output.changed, stats: output.stats, classStrings }
+        output: {
+          code: output.code,
+          changed: output.changed,
+          stats: output.stats,
+          classStrings
+        }
       };
     } catch (error) {
       return { filePath, output: null, error };
@@ -247,7 +300,10 @@ export async function analyzeProject(options: AnalyzeProjectOptions): Promise<An
       report.parseErrorCount += 1;
       report.parseErrors.push({
         filePath: outcome.filePath,
-        message: outcome.error instanceof Error ? outcome.error.message : "Unknown parse error"
+        message:
+          outcome.error instanceof Error
+            ? outcome.error.message
+            : "Unknown parse error"
       });
       continue;
     }
@@ -275,7 +331,10 @@ export async function analyzeProject(options: AnalyzeProjectOptions): Promise<An
     report.suggestionCount += output.stats.suggestionCount;
 
     const shouldWrite =
-      options.mode === "fix" && options.config.autoFix && output.changed && !dryRun;
+      options.mode === "fix" &&
+      options.config.autoFix &&
+      output.changed &&
+      !dryRun;
     if (shouldWrite) {
       await writeFile(filePath, output.code, "utf8");
       changedFiles.push(filePath);
@@ -283,11 +342,27 @@ export async function analyzeProject(options: AnalyzeProjectOptions): Promise<An
   }
 
   const filesData = outcomes
-    .filter((o): o is WorkerResult & { output: NonNullable<WorkerResult["output"]> } => !!o.output)
-    .map((o) => ({ filePath: o.filePath, classStrings: o.output.classStrings ?? [] }));
+    .filter(
+      (
+        o
+      ): o is WorkerResult & { output: NonNullable<WorkerResult["output"]> } =>
+        !!o.output
+    )
+    .map((o) => ({
+      filePath: o.filePath,
+      classStrings: o.output.classStrings ?? []
+    }));
   if (filesData.length > 0) {
     report.duplicatePatterns = findDuplicatePatterns(filesData, 2);
   }
+
+  if (report.parseErrorCount > 0) {
+    report.log!.push({
+      level: "warn",
+      message: `${report.parseErrorCount} parse error(s) (see parseErrors)`
+    });
+  }
+  report.log!.push({ level: "info", message: "Scan complete" });
 
   return { report, changedFiles };
 }

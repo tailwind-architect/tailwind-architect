@@ -26,10 +26,9 @@ export function analyzeClassList(
   const conflicts = config.detectConflicts
     ? detectConflicts(parsed, { tailwindPrefix: options.tailwindPrefix })
     : [];
-  const {
-    kept: redundantFiltered,
-    removed
-  } = config.removeRedundant ? removeRedundant(parsed) : { kept: parsed, removed: [] };
+  const { kept: redundantFiltered, removed } = config.removeRedundant
+    ? removeRedundant(parsed)
+    : { kept: parsed, removed: [] };
   let suggestions = detectOptimizationSuggestions(redundantFiltered);
 
   const pluginLints: PluginLintResult[] = [];

@@ -6,17 +6,17 @@ developer tool.
 
 Current project state:
 
--   Monorepo initialized
--   Core engine created
--   AST parsing implemented
--   CLI commands implemented (analyze / fix / lint)
--   Initial tests implemented
+- Monorepo initialized
+- Core engine created
+- AST parsing implemented
+- CLI commands implemented (analyze / fix / lint)
+- Initial tests implemented
 
 Goal:
 
 Ship a stable, scalable Tailwind analysis and refactor tool.
 
-------------------------------------------------------------------------
+---
 
 # Phase 1 --- Stabilize Core Engine
 
@@ -38,11 +38,11 @@ tailwind-architect lint ./src
 
 Test against real ecosystems:
 
--   Next.js project
--   Tailwind UI examples
--   shadcn/ui components
+- Next.js project
+- Tailwind UI examples
+- shadcn/ui components
 
-------------------------------------------------------------------------
+---
 
 # Phase 2 --- Improve Utility Resolution
 
@@ -59,11 +59,11 @@ graph
 
 Tasks:
 
--   Resolve utility → CSS properties
--   Map properties to utilities
--   Detect overlaps
+- Resolve utility → CSS properties
+- Map properties to utilities
+- Detect overlaps
 
-------------------------------------------------------------------------
+---
 
 # Phase 3 --- Variant Engine
 
@@ -79,7 +79,7 @@ Implementation steps:
 2.  Associate utilities with variant context
 3.  Evaluate conflicts inside variant scope
 
-------------------------------------------------------------------------
+---
 
 # Phase 4 --- Framework Adapters
 
@@ -95,10 +95,10 @@ adapters/ react.ts vue.ts astro.ts svelte.ts
 
 Responsibilities:
 
--   extract class strings
--   return standardized ClassNode objects
+- extract class strings
+- return standardized ClassNode objects
 
-------------------------------------------------------------------------
+---
 
 # Phase 5 --- VSCode / Cursor Extension
 
@@ -108,16 +108,16 @@ packages/vscode-extension
 
 Features:
 
--   Command palette command
--   Inline diagnostics
--   Quick fixes
--   Optional format-on-save
+- Command palette command
+- Inline diagnostics
+- Quick fixes
+- Optional format-on-save
 
 Command example:
 
 Tailwind Architect: Fix Classes
 
-------------------------------------------------------------------------
+---
 
 # Phase 6 --- CLI Improvements
 
@@ -131,7 +131,7 @@ Example:
 
 tailwind-architect analyze ./src --report json
 
-------------------------------------------------------------------------
+---
 
 # Phase 7 --- Performance Layer
 
@@ -143,16 +143,16 @@ Target scale:
 
 Implement:
 
--   worker threads
--   AST cache
--   Tailwind context cache
--   concurrent scanning
+- worker threads
+- AST cache
+- Tailwind context cache
+- concurrent scanning
 
 Cache key:
 
 projectRoot + tailwindConfigHash
 
-------------------------------------------------------------------------
+---
 
 # Phase 8 --- Advanced Analysis
 
@@ -164,10 +164,10 @@ flex items-center gap-2
 
 Suggestion:
 
--   extract component
--   create utility class
+- extract component
+- create utility class
 
-------------------------------------------------------------------------
+---
 
 # Phase 9 --- Plugin System
 
@@ -179,11 +179,11 @@ tailwind-architect-plugin
 
 Plugin capabilities:
 
--   custom lint rules
--   custom sorting groups
--   design system enforcement
+- custom lint rules
+- custom sorting groups
+- design system enforcement
 
-------------------------------------------------------------------------
+---
 
 # Phase 10 --- Release Preparation
 
@@ -196,24 +196,24 @@ Tasks:
 3.  Publish npm CLI
 4.  Create GitHub examples
 
-------------------------------------------------------------------------
+---
 
 # Phase 11 --- Launch Strategy
 
 Channels:
 
--   VSCode Marketplace
--   GitHub
--   Product Hunt
--   Reddit r/webdev
--   Twitter dev community
+- VSCode Marketplace
+- GitHub
+- Product Hunt
+- Reddit r/webdev
+- Twitter dev community
 
 Content ideas:
 
--   "10 Tailwind mistakes this extension fixes"
--   demo videos
+- "10 Tailwind mistakes this extension fixes"
+- demo videos
 
-------------------------------------------------------------------------
+---
 
 # Long Term Vision
 
@@ -223,7 +223,7 @@ ESLint + Prettier + Refactor engine for Tailwind CSS
 
 Core values:
 
--   safe transformations
--   fast analysis
--   scalable architecture
--   developer productivity
+- safe transformations
+- fast analysis
+- scalable architecture
+- developer productivity

@@ -2,11 +2,11 @@
 
 ## Commands
 
-| Command   | Description                                      |
-| --------- | ------------------------------------------------- |
+| Command   | Description                                                                  |
+| --------- | ---------------------------------------------------------------------------- |
 | `analyze` | Scan files and report conflicts, redundancy, suggestions, duplicate patterns |
-| `fix`     | Apply fixes (sort, remove redundant, apply suggestions) and write files |
-| `lint`    | Same as analyze; exits with code 1 if there are issues (for CI) |
+| `fix`     | Apply fixes (sort, remove redundant, apply suggestions) and write files      |
+| `lint`    | Same as analyze; exits with code 1 if there are issues (for CI)              |
 
 ## Usage
 

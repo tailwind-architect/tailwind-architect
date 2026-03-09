@@ -1,12 +1,7 @@
 import type { DuplicatePattern } from "@tailwind-architect/shared";
 
 function normalize(classString: string): string {
-  return classString
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .sort()
-    .join(" ");
+  return classString.trim().split(/\s+/).filter(Boolean).sort().join(" ");
 }
 
 export type FileClassStrings = {
@@ -23,7 +18,10 @@ export function findDuplicatePatterns(
   filesData: FileClassStrings[],
   minOccurrences = 2
 ): DuplicatePattern[] {
-  const byNormalized = new Map<string, { filePaths: Set<string>; pattern: string[] }>();
+  const byNormalized = new Map<
+    string,
+    { filePaths: Set<string>; pattern: string[] }
+  >();
 
   for (const { filePath, classStrings } of filesData) {
     const seen = new Set<string>();

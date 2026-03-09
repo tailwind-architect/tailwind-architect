@@ -5,5 +5,6 @@ export type {
   FeatureFlags,
   FileIssue,
   FileParseError,
+  LogEntry,
   ProjectAnalysis
 } from "./types.js";

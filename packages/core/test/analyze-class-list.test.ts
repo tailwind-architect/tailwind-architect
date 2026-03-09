@@ -9,7 +9,9 @@ describe("analyzeClassList", () => {
       defaultConfig
     );
 
-    expect(output.sorted.join(" ")).toBe("flex justify-center w-full p-4 bg-white");
+    expect(output.sorted.join(" ")).toBe(
+      "flex justify-center w-full p-4 bg-white"
+    );
   });
 
   it("removes redundant spacing tokens", () => {
@@ -19,7 +21,9 @@ describe("analyzeClassList", () => {
 
   it("detects display conflicts", () => {
     const output = analyzeClassList(["flex", "grid"], defaultConfig);
-    expect(output.conflicts.some((item) => item.property === "display")).toBe(true);
+    expect(output.conflicts.some((item) => item.property === "display")).toBe(
+      true
+    );
   });
 
   it("detects merge-axis suggestions", () => {
@@ -62,24 +66,19 @@ describe("analyzeClassList", () => {
   });
 
   it("suggests merge-axis only within same variant scope (md:pt-4 md:pb-4 -> md:py-4)", () => {
-    const output = analyzeClassList(
-      ["md:pt-4", "md:pb-4"],
-      defaultConfig
-    );
+    const output = analyzeClassList(["md:pt-4", "md:pb-4"], defaultConfig);
     expect(output.suggestions).toHaveLength(1);
     expect(output.suggestions[0]?.after).toBe("md:py-4");
   });
 
   it("does not suggest merge across different variant scopes", () => {
-    const output = analyzeClassList(
-      ["pt-4", "md:pb-4"],
-      defaultConfig
-    );
+    const output = analyzeClassList(["pt-4", "md:pb-4"], defaultConfig);
     expect(output.suggestions).toHaveLength(0);
   });
 
   it("reorders login-page style string: layout then alignment then sizing then spacing then visual", () => {
-    const classString = "flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4";
+    const classString =
+      "flex min-h-screen flex-col items-center justify-center bg-muted/30 px-4";
     const classes = classString.split(" ");
     const output = analyzeClassList(classes, defaultConfig);
     // layout (flex, flex-col) -> alignment (items-center, justify-center) -> sizing (min-h-screen) -> spacing (px-4) -> visual (bg-*)

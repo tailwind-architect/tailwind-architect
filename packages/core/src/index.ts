@@ -3,7 +3,10 @@ export { analyzeSourceWithAdapter } from "./analyze-with-adapter.js";
 export { findDuplicatePatterns } from "./duplicate-patterns.js";
 export { analyzeClassList } from "./analyze-class-list.js";
 export { analyzeProject } from "./project.js";
-export { analyzeSourceCode, extractClassNodesFromSource } from "./analyze-source.js";
+export {
+  analyzeSourceCode,
+  extractClassNodesFromSource
+} from "./analyze-source.js";
 export { loadArchitectConfig, defaultConfig } from "./config.js";
 export { loadPlugins } from "./plugins.js";
 export { loadTailwindContext } from "./tailwind-context.js";

@@ -119,6 +119,8 @@ export function isDynamicToken(raw: string): boolean {
 
 export function serializeTokens(tokens: UtilityToken[]): string[] {
   return tokens.map((token) =>
-    token.variants.length ? `${token.variants.join(":")}:${token.utility}` : token.utility
+    token.variants.length
+      ? `${token.variants.join(":")}:${token.utility}`
+      : token.utility
   );
 }

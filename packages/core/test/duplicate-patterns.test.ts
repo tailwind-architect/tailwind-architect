@@ -38,6 +38,8 @@ describe("findDuplicatePatterns", () => {
     ];
     const result = findDuplicatePatterns(data, 2);
     expect(result).toHaveLength(1);
-    expect(result[0].pattern.sort()).toEqual(["flex", "gap-2", "items-center"].sort());
+    expect(result[0].pattern.sort()).toEqual(
+      ["flex", "gap-2", "items-center"].sort()
+    );
   });
 });

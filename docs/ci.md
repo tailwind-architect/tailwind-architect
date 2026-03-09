@@ -16,7 +16,7 @@ tailwind-architect analyze --report json
 tailwind-architect lint --report json
 ```
 
-Output is a single JSON object with: `command`, `filesScanned`, `filesWithIssues`, `conflictCount`, `redundancyCount`, `suggestionCount`, `parseErrorCount`, `parseErrors`, `perFile`, and (for `fix`) `changedFiles`.
+Output is a single JSON object with: `command`, `filesScanned`, `filesWithIssues`, `conflictCount`, `redundancyCount`, `suggestionCount`, `parseErrorCount`, `parseErrors`, `perFile`, `truncated`, `filesLimit`, `log` (array of `{ level, message }`), and (for `fix`) `changedFiles`.
 
 ## Example: GitHub Actions
 

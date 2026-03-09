@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.7] - 2025-03-09
+
 ### Added
 
 - **Worker-based processing:** Optional Node.js worker threads for parallel file processing when `--max-workers` > 1; context cache per worker
@@ -22,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Variant-scoped conflict detection and merge-axis suggestions
 - `--max-workers`, `--dry-run`, and optional path argument for CLI
 - Bounded per-file report entries and performance doc
+- **Security:** Plugin path validation to prevent path traversal; only load plugins from under `node_modules`
+- **CLI:** Validate `rootDir` exists and is a directory before running; clear stderr message and exit 1 on failure
+- **Config:** Schema validation (Zod) for `tailwind-architect.config.json`; invalid or malformed config falls back to defaults
+- **Repo:** ESLint and Prettier; CI runs lint and format:check
+- **Extension:** `fixWorkspaceMaxFiles` setting; in-memory config cache with invalidation on save of `tailwind-architect.config.json`
+- **Report:** Optional `log` array (info/warn entries) in analyze result and `--report json`; `truncated` and `filesLimit` in JSON output when maxFiles is used
+- **Publish:** Test and lint steps in release workflow before publishing to npm and packaging the extension
 
 ## [1.0.0] - Initial release
 

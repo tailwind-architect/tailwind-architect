@@ -3,13 +3,17 @@
   "displayName": "Tailwind Architect",
   "icon": "images/logo.png",
   "description": "Analyze and fix Tailwind CSS classes: sort, remove redundancy, detect conflicts",
-  "version": "1.0.6",
+  "version": "1.0.7",
+  "license": "MIT",
   "type": "module",
   "publisher": "vitoriowingert",
   "engines": {
     "vscode": "^1.74.0"
   },
-  "categories": ["Linters", "Formatters"],
+  "categories": [
+    "Linters",
+    "Formatters"
+  ],
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
@@ -45,6 +49,12 @@
           "type": "boolean",
           "default": false,
           "description": "Show one diagnostic per class string span (conflicts/suggestions) instead of one per file"
+        },
+        "tailwindArchitect.fixWorkspaceMaxFiles": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 0,
+          "description": "Maximum number of files to process when running Fix Workspace. 0 = no limit. Use a lower value for large workspaces to avoid UI freeze."
         }
       }
     }
@@ -55,7 +65,7 @@
     "package": "npx vsce package --no-dependencies"
   },
   "dependencies": {
-    "@tailwind-architect/core": "1.0.6"
+    "@tailwind-architect/core": "1.0.7"
   },
   "devDependencies": {
     "@types/vscode": "^1.74.0",

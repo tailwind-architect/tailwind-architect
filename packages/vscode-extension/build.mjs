@@ -10,6 +10,10 @@ if (existsSync(rootLogo)) {
   mkdirSync(join(__dirname, "images"), { recursive: true });
   copyFileSync(rootLogo, destLogo);
 }
+const rootLicense = join(__dirname, "../../LICENSE");
+if (existsSync(rootLicense)) {
+  copyFileSync(rootLicense, join(__dirname, "LICENSE"));
+}
 
 const REQUIRE_SHIM_BANNER = `import { createRequire } from "module";
 globalThis.require = createRequire(import.meta.url);
@@ -22,5 +26,5 @@ await esbuild.build({
   platform: "node",
   format: "esm",
   external: ["vscode"],
-  banner: { js: REQUIRE_SHIM_BANNER },
+  banner: { js: REQUIRE_SHIM_BANNER }
 });

@@ -25,7 +25,7 @@ const config = await loadArchitectConfig(process.cwd());
 const { report, changedFiles } = await analyzeProject({
   rootDir: "./src",
   config,
-  mode: "fix",       // "analyze" | "fix" | "lint"
+  mode: "fix", // "analyze" | "fix" | "lint"
   dryRun: true
 });
 
@@ -38,28 +38,28 @@ console.log(report.filesScanned, report.conflictCount, report.redundancyCount);
 
 ### Project-level
 
-| Function | Description |
-|----------|-------------|
-| `analyzeProject(options)` | Scans a directory for supported files, runs analysis (and optionally fix). Returns `{ report: ProjectAnalysis, changedFiles: string[] }`. Options: `rootDir`, `config`, `mode` (`"analyze"` \| `"fix"` \| `"lint"`), `maxWorkers`, `dryRun`. |
-| `loadArchitectConfig(cwd)` | Loads `tailwind-architect.config.json` from `cwd`; returns `AnalyzerConfig`. |
-| `loadTailwindContext(rootDir)` | Resolves Tailwind config and version from the project; returns `TailwindContext`. |
-| `loadPlugins(pluginNames, rootDir)` | Loads Tailwind Architect plugins by name from `rootDir`. |
-| `findDuplicatePatterns(sources)` | Finds repeated class sequences across analyzed sources. |
+| Function                            | Description                                                                                                                                                                                                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `analyzeProject(options)`           | Scans a directory for supported files, runs analysis (and optionally fix). Returns `{ report: ProjectAnalysis, changedFiles: string[] }`. Options: `rootDir`, `config`, `mode` (`"analyze"` \| `"fix"` \| `"lint"`), `maxWorkers`, `dryRun`. |
+| `loadArchitectConfig(cwd)`          | Loads `tailwind-architect.config.json` from `cwd`; returns `AnalyzerConfig`.                                                                                                                                                                 |
+| `loadTailwindContext(rootDir)`      | Resolves Tailwind config and version from the project; returns `TailwindContext`.                                                                                                                                                            |
+| `loadPlugins(pluginNames, rootDir)` | Loads Tailwind Architect plugins by name from `rootDir`.                                                                                                                                                                                     |
+| `findDuplicatePatterns(sources)`    | Finds repeated class sequences across analyzed sources.                                                                                                                                                                                      |
 
 ### File / source-level
 
-| Function | Description |
-|----------|-------------|
-| `analyzeSourceCode(filePath, code, config, tailwindContext?)` | Analyzes a single file’s source; returns analysis results per class string. |
-| `analyzeSourceWithAdapter(filePath, code, config, tailwindContext?)` | Same as above but uses the appropriate adapter (Vue, Astro, Svelte, or JS/TS) for the file extension. |
-| `extractClassNodesFromSource(filePath, code)` | Extracts class string spans from the file (no Tailwind resolution). |
-| `analyzeClassList(classes, config, tailwindContext?)` | Analyzes a list of class strings (e.g. `["flex", "pt-4"]`); returns `AnalysisResult` (sorted, redundant removed, conflicts, suggestions). |
-| `getAdapterForExtension(ext)` | Returns the `SourceAdapter` for a file extension (`.vue`, `.astro`, `.svelte`, or default JS/TS). |
+| Function                                                             | Description                                                                                                                               |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `analyzeSourceCode(filePath, code, config, tailwindContext?)`        | Analyzes a single file’s source; returns analysis results per class string.                                                               |
+| `analyzeSourceWithAdapter(filePath, code, config, tailwindContext?)` | Same as above but uses the appropriate adapter (Vue, Astro, Svelte, or JS/TS) for the file extension.                                     |
+| `extractClassNodesFromSource(filePath, code)`                        | Extracts class string spans from the file (no Tailwind resolution).                                                                       |
+| `analyzeClassList(classes, config, tailwindContext?)`                | Analyzes a list of class strings (e.g. `["flex", "pt-4"]`); returns `AnalysisResult` (sorted, redundant removed, conflicts, suggestions). |
+| `getAdapterForExtension(ext)`                                        | Returns the `SourceAdapter` for a file extension (`.vue`, `.astro`, `.svelte`, or default JS/TS).                                         |
 
 ### Utilities
 
-| Function | Description |
-|----------|-------------|
+| Function                                   | Description                                                        |
+| ------------------------------------------ | ------------------------------------------------------------------ |
 | `ruleBasedResolver`, `resolveToProperties` | Tailwind utility → CSS properties (for custom tooling or plugins). |
 
 ---

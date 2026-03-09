@@ -71,7 +71,10 @@ export function removeRedundant(tokens: UtilityToken[]): {
       const parsed = parseUtility(token.utility);
       if (parsed) {
         const valueKey = `${parsed.prefix}|${parsed.value}`;
-        byPrefixAndValue.set(valueKey, [...(byPrefixAndValue.get(valueKey) ?? []), token]);
+        byPrefixAndValue.set(valueKey, [
+          ...(byPrefixAndValue.get(valueKey) ?? []),
+          token
+        ]);
       }
     }
 

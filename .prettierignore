@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+out
+*.bundle.js
+*.vsix
+package-lock.json
+website/.vitepress/cache
+packages/core/test/fixtures/with-invalid-config/

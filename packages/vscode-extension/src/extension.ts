@@ -2,6 +2,10 @@ import * as vscode from "vscode";
 import * as path from "path";
 
 const DIAGNOSTIC_COLLECTION_NAME = "tailwindArchitect";
+const CONFIG_FILE_NAME = "tailwind-architect.config.json";
+
+/** In-memory cache of architect config per workspace root. Invalidated when config file is saved. */
+const configCache = new Map<string, Record<string, unknown>>();
 
 /** Fallback when loadArchitectConfig returns nothing (e.g. no config file or bundle edge case). */
 const FALLBACK_CONFIG = {
@@ -49,40 +53,105 @@ function getWorkspaceRoot(): string | null {
   return folder.uri.fsPath;
 }
 
-async function analyzeDocument(
-  doc: vscode.TextDocument
-): Promise<{ code: string; changed: boolean; stats: { conflictCount: number; redundancyCount: number; suggestionCount: number } } | null> {
+async function getCachedArchitectConfig(
+  root: string,
+  core: Record<string, unknown>
+): Promise<Record<string, unknown>> {
+  const cached = configCache.get(root);
+  if (cached) return cached;
+  const configRaw = await (
+    core.loadArchitectConfig as (r: string) => Promise<unknown>
+  )(root);
+  const config =
+    !configRaw || typeof configRaw !== "object" ? FALLBACK_CONFIG : configRaw;
+  configCache.set(root, config as Record<string, unknown>);
+  return config as Record<string, unknown>;
+}
+
+function invalidateConfigCacheForRoot(root: string): void {
+  configCache.delete(root);
+}
+
+async function analyzeDocument(doc: vscode.TextDocument): Promise<{
+  code: string;
+  changed: boolean;
+  stats: {
+    conflictCount: number;
+    redundancyCount: number;
+    suggestionCount: number;
+  };
+} | null> {
   const root = getWorkspaceRoot();
   if (!root) return null;
 
   try {
-    const core = await import("@tailwind-architect/core") as Record<string, unknown>;
+    const core = (await import("@tailwind-architect/core")) as Record<
+      string,
+      unknown
+    >;
     if (!core?.loadArchitectConfig || !core?.loadTailwindContext) return null;
-    const configRaw = await (core.loadArchitectConfig as (r: string) => Promise<unknown>)(root);
-    const config = !configRaw || typeof configRaw !== "object" ? FALLBACK_CONFIG : configRaw;
+    const config = await getCachedArchitectConfig(root, core);
     const dir = doc.uri.fsPath.replace(/[/\\][^/\\]+$/, "").replace(/^$/, root);
-    const tailwindContext = await (core.loadTailwindContext as (d: string) => Promise<unknown>)(dir);
+    const tailwindContext = await (
+      core.loadTailwindContext as (d: string) => Promise<unknown>
+    )(dir);
     const ext = path.extname(doc.uri.fsPath);
-    const getAdapter = core.getAdapterForExtension as ((e: string) => unknown) | undefined;
+    const getAdapter = core.getAdapterForExtension as
+      | ((e: string) => unknown)
+      | undefined;
     const adapter = getAdapter?.(ext);
     if (adapter && typeof adapter === "function") {
       const code = doc.getText();
-      const spans = await (adapter as (path: string, code: string) => Promise<unknown[]>)(doc.uri.fsPath, code);
+      const spans = await (
+        adapter as (path: string, code: string) => Promise<unknown[]>
+      )(doc.uri.fsPath, code);
       const prefix =
-        tailwindContext && typeof tailwindContext === "object" && "resolvedConfig" in tailwindContext
-          ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)?.prefix
+        tailwindContext &&
+        typeof tailwindContext === "object" &&
+        "resolvedConfig" in tailwindContext
+          ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)
+              ?.prefix
           : undefined;
-      const result = await (core.analyzeSourceWithAdapter as (c: string, cfg: unknown, s: unknown[], o: unknown) => Promise<{ code: string; changed: boolean; stats: unknown }>)(code, config, spans, {
+      const result = await (
+        core.analyzeSourceWithAdapter as (
+          c: string,
+          cfg: unknown,
+          s: unknown[],
+          o: unknown
+        ) => Promise<{ code: string; changed: boolean; stats: unknown }>
+      )(code, config, spans, {
         tailwindPrefix: prefix,
         applyFixes: false
       });
-      return result as { code: string; changed: boolean; stats: { conflictCount: number; redundancyCount: number; suggestionCount: number } };
+      return result as {
+        code: string;
+        changed: boolean;
+        stats: {
+          conflictCount: number;
+          redundancyCount: number;
+          suggestionCount: number;
+        };
+      };
     }
-    const output = (core.analyzeSourceCode as (code: string, cfg: unknown, opts: unknown) => { code: string; changed: boolean; stats: unknown })(doc.getText(), config, {
+    const output = (
+      core.analyzeSourceCode as (
+        code: string,
+        cfg: unknown,
+        opts: unknown
+      ) => { code: string; changed: boolean; stats: unknown }
+    )(doc.getText(), config, {
       applyFixes: false,
       tailwindContext
     });
-    return output as { code: string; changed: boolean; stats: { conflictCount: number; redundancyCount: number; suggestionCount: number } };
+    return output as {
+      code: string;
+      changed: boolean;
+      stats: {
+        conflictCount: number;
+        redundancyCount: number;
+        suggestionCount: number;
+      };
+    };
   } catch {
     return null;
   }
@@ -90,7 +159,13 @@ async function analyzeDocument(
 
 function outputToDiagnostics(
   doc: vscode.TextDocument,
-  output: { stats: { conflictCount: number; redundancyCount: number; suggestionCount: number } }
+  output: {
+    stats: {
+      conflictCount: number;
+      redundancyCount: number;
+      suggestionCount: number;
+    };
+  }
 ): vscode.Diagnostic[] {
   const diagnostics: vscode.Diagnostic[] = [];
   const { conflictCount, redundancyCount, suggestionCount } = output.stats;
@@ -114,13 +189,27 @@ function outputToDiagnostics(
 
 function spanLevelDiagnostics(
   doc: vscode.TextDocument,
-  classNodes: Array<{ location: { start: number; end: number }; rawString: string; classes: string[] }>,
+  classNodes: Array<{
+    location: { start: number; end: number };
+    rawString: string;
+    classes: string[];
+  }>,
   config: Record<string, unknown>,
   tailwindPrefix: string | undefined,
   core: Record<string, unknown>
 ): vscode.Diagnostic[] {
   const diagnostics: vscode.Diagnostic[] = [];
-  const analyze = core?.analyzeClassList as ((classes: string[], config: Record<string, unknown>, opts?: { tailwindPrefix?: string }) => { conflicts: unknown[]; redundantRemoved: unknown[]; suggestions: unknown[] }) | undefined;
+  const analyze = core?.analyzeClassList as
+    | ((
+        classes: string[],
+        config: Record<string, unknown>,
+        opts?: { tailwindPrefix?: string }
+      ) => {
+        conflicts: unknown[];
+        redundantRemoved: unknown[];
+        suggestions: unknown[];
+      })
+    | undefined;
   if (typeof analyze !== "function") return diagnostics;
   for (const node of classNodes) {
     const result = analyze(node.classes, config, { tailwindPrefix });
@@ -132,9 +221,11 @@ function spanLevelDiagnostics(
     const start = doc.positionAt(node.location.start);
     const end = doc.positionAt(node.location.end);
     const parts: string[] = [];
-    if (result.conflicts.length > 0) parts.push(`${result.conflicts.length} conflict(s)`);
+    if (result.conflicts.length > 0)
+      parts.push(`${result.conflicts.length} conflict(s)`);
     if (result.redundantRemoved.length > 0) parts.push("redundant");
-    if (result.suggestions.length > 0) parts.push(`${result.suggestions.length} suggestion(s)`);
+    if (result.suggestions.length > 0)
+      parts.push(`${result.suggestions.length} suggestion(s)`);
     diagnostics.push(
       new vscode.Diagnostic(
         new vscode.Range(start, end),
@@ -156,8 +247,11 @@ async function updateDiagnostics(
   }
   let spanLevel = false;
   try {
-    const tailwindArchitectConfig = vscode.workspace.getConfiguration?.("tailwindArchitect");
-    spanLevel = tailwindArchitectConfig?.get?.<boolean>("diagnosticsAtSpanLevel") ?? false;
+    const tailwindArchitectConfig =
+      vscode.workspace.getConfiguration?.("tailwindArchitect");
+    spanLevel =
+      tailwindArchitectConfig?.get?.<boolean>("diagnosticsAtSpanLevel") ??
+      false;
   } catch {
     // no workspace or config not ready
   }
@@ -168,20 +262,50 @@ async function updateDiagnostics(
       return;
     }
     try {
-      const core = await import("@tailwind-architect/core") as Record<string, unknown>;
-      if (!core?.loadArchitectConfig || !core?.loadTailwindContext || !core?.extractClassNodesFromSource) {
+      const core = (await import("@tailwind-architect/core")) as Record<
+        string,
+        unknown
+      >;
+      if (
+        !core?.loadArchitectConfig ||
+        !core?.loadTailwindContext ||
+        !core?.extractClassNodesFromSource
+      ) {
         collection.delete(doc.uri);
         return;
       }
-      const configRaw = await (core.loadArchitectConfig as (r: string) => Promise<unknown>)(root);
-      const config = !configRaw || typeof configRaw !== "object" ? FALLBACK_CONFIG : configRaw;
-      const dir = doc.uri.fsPath.replace(/[/\\][^/\\]+$/, "").replace(/^$/, root);
-      const tailwindContext = await (core.loadTailwindContext as (d: string) => Promise<unknown>)(dir);
-      const prefix = tailwindContext && typeof tailwindContext === "object" && "resolvedConfig" in tailwindContext
-        ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)?.prefix
-        : undefined;
-      const classNodes = (core.extractClassNodesFromSource as (code: string, cfg: unknown, opts: unknown) => unknown[])(doc.getText(), config, { tailwindContext });
-      const diagnostics = spanLevelDiagnostics(doc, classNodes as Array<{ location: { start: number; end: number }; rawString: string; classes: string[] }>, config as Record<string, unknown>, prefix, core);
+      const config = await getCachedArchitectConfig(root, core);
+      const dir = doc.uri.fsPath
+        .replace(/[/\\][^/\\]+$/, "")
+        .replace(/^$/, root);
+      const tailwindContext = await (
+        core.loadTailwindContext as (d: string) => Promise<unknown>
+      )(dir);
+      const prefix =
+        tailwindContext &&
+        typeof tailwindContext === "object" &&
+        "resolvedConfig" in tailwindContext
+          ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)
+              ?.prefix
+          : undefined;
+      const classNodes = (
+        core.extractClassNodesFromSource as (
+          code: string,
+          cfg: unknown,
+          opts: unknown
+        ) => unknown[]
+      )(doc.getText(), config, { tailwindContext });
+      const diagnostics = spanLevelDiagnostics(
+        doc,
+        classNodes as Array<{
+          location: { start: number; end: number };
+          rawString: string;
+          classes: string[];
+        }>,
+        config as Record<string, unknown>,
+        prefix,
+        core
+      );
       collection.set(doc.uri, diagnostics);
     } catch {
       collection.delete(doc.uri);
@@ -200,45 +324,78 @@ async function updateDiagnostics(
 async function fixDocument(editor: vscode.TextEditor): Promise<void> {
   const doc = editor.document;
   if (!isSupportedDocument(doc)) {
-    vscode.window.showWarningMessage("Tailwind Architect: Unsupported file type.");
+    vscode.window.showWarningMessage(
+      "Tailwind Architect: Unsupported file type."
+    );
     return;
   }
 
   const root = getWorkspaceRoot();
   if (!root) {
-    vscode.window.showWarningMessage("Tailwind Architect: No workspace folder open.");
+    vscode.window.showWarningMessage(
+      "Tailwind Architect: No workspace folder open."
+    );
     return;
   }
 
   try {
-    const core = await import("@tailwind-architect/core") as Record<string, unknown>;
+    const core = (await import("@tailwind-architect/core")) as Record<
+      string,
+      unknown
+    >;
     if (!core?.loadArchitectConfig || !core?.loadTailwindContext) {
-      vscode.window.showErrorMessage("Tailwind Architect: Core module failed to load.");
+      vscode.window.showErrorMessage(
+        "Tailwind Architect: Core module failed to load."
+      );
       return;
     }
-    const configRaw = await (core.loadArchitectConfig as (r: string) => Promise<unknown>)(root);
-    const baseConfig = !configRaw || typeof configRaw !== "object" ? FALLBACK_CONFIG : configRaw;
-    const config = configForFix(baseConfig as Record<string, unknown>);
+    const baseConfig = await getCachedArchitectConfig(root, core);
+    const config = configForFix(baseConfig);
     const dir = doc.uri.fsPath.replace(/[/\\][^/\\]+$/, "").replace(/^$/, root);
-    const tailwindContext = await (core.loadTailwindContext as (d: string) => Promise<unknown>)(dir);
+    const tailwindContext = await (
+      core.loadTailwindContext as (d: string) => Promise<unknown>
+    )(dir);
     const ext = path.extname(doc.uri.fsPath);
-    const getAdapter = core.getAdapterForExtension as ((e: string) => unknown) | undefined;
+    const getAdapter = core.getAdapterForExtension as
+      | ((e: string) => unknown)
+      | undefined;
     const adapter = getAdapter?.(ext);
     let output: { code: string; changed: boolean };
     const docText = doc.getText();
     if (adapter && typeof adapter === "function") {
-      const spans = await (adapter as (path: string, code: string) => Promise<unknown[]>)(doc.uri.fsPath, docText);
-      const prefix = tailwindContext && typeof tailwindContext === "object" && "resolvedConfig" in tailwindContext
-        ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)?.prefix
-        : undefined;
-      output = await (core.analyzeSourceWithAdapter as (c: string, cfg: unknown, s: unknown[], o: unknown) => Promise<{ code: string; changed: boolean }>)(docText, config, spans, {
+      const spans = await (
+        adapter as (path: string, code: string) => Promise<unknown[]>
+      )(doc.uri.fsPath, docText);
+      const prefix =
+        tailwindContext &&
+        typeof tailwindContext === "object" &&
+        "resolvedConfig" in tailwindContext
+          ? (tailwindContext.resolvedConfig as { prefix?: string } | undefined)
+              ?.prefix
+          : undefined;
+      output = await (
+        core.analyzeSourceWithAdapter as (
+          c: string,
+          cfg: unknown,
+          s: unknown[],
+          o: unknown
+        ) => Promise<{ code: string; changed: boolean }>
+      )(docText, config, spans, {
         tailwindPrefix: prefix,
         applyFixes: true
       });
     } else {
-      const analyzeSourceCode = core.analyzeSourceCode as ((code: string, cfg: unknown, opts: unknown) => { code: string; changed: boolean }) | undefined;
+      const analyzeSourceCode = core.analyzeSourceCode as
+        | ((
+            code: string,
+            cfg: unknown,
+            opts: unknown
+          ) => { code: string; changed: boolean })
+        | undefined;
       if (typeof analyzeSourceCode !== "function") {
-        vscode.window.showErrorMessage("Tailwind Architect: analyzeSourceCode not available.");
+        vscode.window.showErrorMessage(
+          "Tailwind Architect: analyzeSourceCode not available."
+        );
         return;
       }
       const rawPath = doc.uri.fsPath || "";
@@ -249,11 +406,12 @@ async function fixDocument(editor: vscode.TextEditor): Promise<void> {
       if (doc.uri.scheme === "file" && rawPath && hasTsxExt) {
         filename = hasBracketsInPath ? path.basename(rawPath) : rawPath;
       } else {
-        filename = doc.languageId === "typescriptreact"
-          ? "component.tsx"
-          : doc.languageId === "javascriptreact"
-            ? "component.jsx"
-            : "component.tsx";
+        filename =
+          doc.languageId === "typescriptreact"
+            ? "component.tsx"
+            : doc.languageId === "javascriptreact"
+              ? "component.jsx"
+              : "component.tsx";
       }
       output = analyzeSourceCode(docText, config, {
         applyFixes: true,
@@ -270,13 +428,17 @@ async function fixDocument(editor: vscode.TextEditor): Promise<void> {
         codeChanged = output.code !== docText;
       }
       if (!codeChanged) {
-        vscode.window.showInformationMessage("Tailwind Architect: No changes needed.");
+        vscode.window.showInformationMessage(
+          "Tailwind Architect: No changes needed."
+        );
         return;
       }
     }
     const codeChanged = output.code !== docText;
     if (!codeChanged) {
-      vscode.window.showInformationMessage("Tailwind Architect: No changes needed.");
+      vscode.window.showInformationMessage(
+        "Tailwind Architect: No changes needed."
+      );
       return;
     }
     const fullRange = new vscode.Range(
@@ -302,64 +464,110 @@ function getDiagnosticCollection(): vscode.DiagnosticCollection | null {
 }
 
 export function activate(context: vscode.ExtensionContext): void {
-  diagnosticCollection = vscode.languages.createDiagnosticCollection(DIAGNOSTIC_COLLECTION_NAME);
+  diagnosticCollection = vscode.languages.createDiagnosticCollection(
+    DIAGNOSTIC_COLLECTION_NAME
+  );
   context.subscriptions.push(diagnosticCollection);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("tailwindArchitect.fixClasses", async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) {
-        vscode.window.showWarningMessage("Tailwind Architect: No active editor.");
-        return;
+    vscode.commands.registerCommand(
+      "tailwindArchitect.fixClasses",
+      async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          vscode.window.showWarningMessage(
+            "Tailwind Architect: No active editor."
+          );
+          return;
+        }
+        await fixDocument(editor);
       }
-      await fixDocument(editor);
-    })
+    )
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("tailwindArchitect.fixWorkspace", async () => {
-      const root = getWorkspaceRoot();
-      if (!root) {
-        vscode.window.showWarningMessage("Tailwind Architect: No workspace folder open.");
-        return;
-      }
-      try {
-        const core = await import("@tailwind-architect/core") as Record<string, unknown>;
-        if (!core?.loadArchitectConfig || typeof core.analyzeProject !== "function") {
-          vscode.window.showErrorMessage("Tailwind Architect: Core module failed to load.");
+    vscode.commands.registerCommand(
+      "tailwindArchitect.fixWorkspace",
+      async () => {
+        const root = getWorkspaceRoot();
+        if (!root) {
+          vscode.window.showWarningMessage(
+            "Tailwind Architect: No workspace folder open."
+          );
           return;
         }
-        const configRaw = await (core.loadArchitectConfig as (r: string) => Promise<unknown>)(root);
-        const baseConfig = !configRaw || typeof configRaw !== "object" ? FALLBACK_CONFIG : configRaw;
-        const config = configForFix(baseConfig as Record<string, unknown>);
-        await vscode.window.withProgress(
-          {
-            location: vscode.ProgressLocation.Notification,
-            title: "Tailwind Architect: Fixing workspace..."
-          },
-          async () => {
-            const { report, changedFiles } = await (core.analyzeProject as (opts: { rootDir: string; config: unknown; mode: string }) => Promise<{ report: { filesScanned: number; filesWithIssues: number }; changedFiles: string[] }>)({
-              rootDir: root,
-              config,
-              mode: "fix"
-            });
-            const collection = getDiagnosticCollection();
-            if (collection) {
-              for (const uri of changedFiles) {
-                collection.delete(vscode.Uri.file(uri));
-              }
-            }
-            vscode.window.showInformationMessage(
-              `Tailwind Architect: Fixed ${changedFiles.length} file(s). Scanned ${report.filesScanned}, ${report.filesWithIssues} with issues.`
+        try {
+          const core = (await import("@tailwind-architect/core")) as Record<
+            string,
+            unknown
+          >;
+          if (
+            !core?.loadArchitectConfig ||
+            typeof core.analyzeProject !== "function"
+          ) {
+            vscode.window.showErrorMessage(
+              "Tailwind Architect: Core module failed to load."
             );
+            return;
           }
-        );
-      } catch (err) {
-        vscode.window.showErrorMessage(
-          `Tailwind Architect: ${err instanceof Error ? err.message : String(err)}`
-        );
+          const baseConfig = await getCachedArchitectConfig(root, core);
+          const config = configForFix(baseConfig);
+          let maxFiles: number | undefined;
+          try {
+            const tailwindConfig =
+              vscode.workspace.getConfiguration?.("tailwindArchitect");
+            const n = tailwindConfig?.get<number>("fixWorkspaceMaxFiles");
+            if (typeof n === "number" && n > 0) maxFiles = n;
+          } catch {
+            // use default
+          }
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: "Tailwind Architect: Fixing workspace..."
+            },
+            async () => {
+              const { report, changedFiles } = await (
+                core.analyzeProject as (opts: {
+                  rootDir: string;
+                  config: unknown;
+                  mode: string;
+                  maxFiles?: number;
+                }) => Promise<{
+                  report: {
+                    filesScanned: number;
+                    filesWithIssues: number;
+                    truncated?: boolean;
+                    filesLimit?: number;
+                  };
+                  changedFiles: string[];
+                }>
+              )({
+                rootDir: root,
+                config,
+                mode: "fix",
+                ...(maxFiles != null ? { maxFiles } : {})
+              });
+              const collection = getDiagnosticCollection();
+              if (collection) {
+                for (const uri of changedFiles) {
+                  collection.delete(vscode.Uri.file(uri));
+                }
+              }
+              let msg = `Tailwind Architect: Fixed ${changedFiles.length} file(s). Scanned ${report.filesScanned}, ${report.filesWithIssues} with issues.`;
+              if (report.truncated && report.filesLimit != null) {
+                msg += ` Only first ${report.filesLimit} files were processed; increase tailwindArchitect.fixWorkspaceMaxFiles to fix more.`;
+              }
+              vscode.window.showInformationMessage(msg);
+            }
+          );
+        } catch (err) {
+          vscode.window.showErrorMessage(
+            `Tailwind Architect: ${err instanceof Error ? err.message : String(err)}`
+          );
+        }
       }
-    })
+    )
   );
 
   const updateDoc = (doc: vscode.TextDocument) => {
@@ -367,15 +575,24 @@ export function activate(context: vscode.ExtensionContext): void {
     if (col) updateDiagnostics(doc, col);
   };
 
-  if (vscode.window.activeTextEditor && isSupportedDocument(vscode.window.activeTextEditor.document)) {
+  if (
+    vscode.window.activeTextEditor &&
+    isSupportedDocument(vscode.window.activeTextEditor.document)
+  ) {
     updateDoc(vscode.window.activeTextEditor.document);
   }
 
-  context.subscriptions.push(
-    vscode.workspace.onDidOpenTextDocument(updateDoc)
-  );
+  context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(updateDoc));
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument((doc) => {
+      const root = getWorkspaceRoot();
+      if (
+        root &&
+        path.normalize(doc.uri.fsPath) ===
+          path.normalize(path.join(root, CONFIG_FILE_NAME))
+      ) {
+        invalidateConfigCacheForRoot(root);
+      }
       updateDoc(doc);
     })
   );
@@ -384,13 +601,16 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.workspace.onWillSaveTextDocument((e) => {
       let formatOnSave = false;
       try {
-        const tailwindConfig = vscode.workspace.getConfiguration?.("tailwindArchitect");
+        const tailwindConfig =
+          vscode.workspace.getConfiguration?.("tailwindArchitect");
         formatOnSave = tailwindConfig?.get?.<boolean>("formatOnSave") ?? false;
       } catch {
         // ignore
       }
       if (!formatOnSave || !isSupportedDocument(e.document)) return;
-      const editor = vscode.window.visibleTextEditors.find((ed) => ed.document.uri.toString() === e.document.uri.toString());
+      const editor = vscode.window.visibleTextEditors.find(
+        (ed) => ed.document.uri.toString() === e.document.uri.toString()
+      );
       if (editor) e.waitUntil(fixDocument(editor));
     })
   );
@@ -485,6 +705,7 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export function deactivate(): void {
+  configCache.clear();
   diagnosticCollection?.dispose();
   diagnosticCollection = null;
 }

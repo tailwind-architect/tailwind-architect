@@ -1,6 +1,7 @@
 export default {
   title: "Tailwind Architect",
-  description: "AST-first tooling for Tailwind class analysis, sorting, and refactoring",
+  description:
+    "AST-first tooling for Tailwind class analysis, sorting, and refactoring",
   base: "/tailwind-architect/",
   themeConfig: {
     nav: [
@@ -8,7 +9,10 @@ export default {
       { text: "CLI", link: "/cli" },
       { text: "Configuration", link: "/configuration" },
       { text: "Extension", link: "/extension" },
-      { text: "GitHub", link: "https://github.com/vitoriowingert/tailwind-architect" }
+      {
+        text: "GitHub",
+        link: "https://github.com/vitoriowingert/tailwind-architect"
+      }
     ],
     sidebar: [
       { text: "Introduction", link: "/" },

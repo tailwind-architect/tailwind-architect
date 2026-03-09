@@ -10,7 +10,10 @@ export type {
 } from "@tailwind-architect/shared";
 
 export type UtilityResolver = {
-  resolveToProperties(utility: string, context?: TailwindContext | null): string[];
+  resolveToProperties(
+    utility: string,
+    context?: TailwindContext | null
+  ): string[];
 };
 
 export type ConflictKind = "override" | "redundancy" | "impossible-combination";
@@ -86,5 +89,8 @@ export type TailwindArchitectPlugin = {
   name: string;
   lintRules?: Array<(context: PluginLintContext) => PluginLintResult[]>;
   sortGroups?: SortGroup[];
-  suggest?: (context: { classList: string[]; variantStack: string[] }) => Suggestion[];
+  suggest?: (context: {
+    classList: string[];
+    variantStack: string[];
+  }) => Suggestion[];
 };

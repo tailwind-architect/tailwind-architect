@@ -17,13 +17,21 @@ export default {
   ],
 
   sortGroups: [
-    { name: "custom-first", test: (utility) => utility.startsWith("my-"), order: 0 }
+    {
+      name: "custom-first",
+      test: (utility) => utility.startsWith("my-"),
+      order: 0
+    }
   ],
 
   suggest(ctx) {
     if (ctx.classList.length > 15) {
       return [
-        { before: ctx.classList.slice(0, 2), after: "/* consider extracting */", kind: "extract" }
+        {
+          before: ctx.classList.slice(0, 2),
+          after: "/* consider extracting */",
+          kind: "extract"
+        }
       ];
     }
     return [];

@@ -48,32 +48,66 @@ export function resolveUtilityProperty(token: UtilityToken): string | null {
   if (DISPLAY_IMPOSSIBLE.has(utility)) return "display";
   if (utility.startsWith("bg-")) return "background-color";
   if (utility.startsWith("text-")) return textProperty(utility);
-  if (utility.startsWith("w-") || utility.startsWith("min-w-") || utility.startsWith("max-w-")) {
+  if (
+    utility.startsWith("w-") ||
+    utility.startsWith("min-w-") ||
+    utility.startsWith("max-w-")
+  ) {
     return "width";
   }
-  if (utility.startsWith("h-") || utility.startsWith("min-h-") || utility.startsWith("max-h-")) {
+  if (
+    utility.startsWith("h-") ||
+    utility.startsWith("min-h-") ||
+    utility.startsWith("max-h-")
+  ) {
     return "height";
   }
-  if (utility.startsWith("p-") || utility.startsWith("px-") || utility.startsWith("py-")) return "padding";
-  if (utility.startsWith("m-") || utility.startsWith("mx-") || utility.startsWith("my-")) return "margin";
-  if (utility.startsWith("pt-") || utility.startsWith("pb-") || utility.startsWith("pl-") || utility.startsWith("pr-")) {
+  if (
+    utility.startsWith("p-") ||
+    utility.startsWith("px-") ||
+    utility.startsWith("py-")
+  )
+    return "padding";
+  if (
+    utility.startsWith("m-") ||
+    utility.startsWith("mx-") ||
+    utility.startsWith("my-")
+  )
+    return "margin";
+  if (
+    utility.startsWith("pt-") ||
+    utility.startsWith("pb-") ||
+    utility.startsWith("pl-") ||
+    utility.startsWith("pr-")
+  ) {
     return utility.slice(0, 2);
   }
-  if (utility.startsWith("mt-") || utility.startsWith("mb-") || utility.startsWith("ml-") || utility.startsWith("mr-")) {
+  if (
+    utility.startsWith("mt-") ||
+    utility.startsWith("mb-") ||
+    utility.startsWith("ml-") ||
+    utility.startsWith("mr-")
+  ) {
     return utility.slice(0, 2);
   }
   if (utility.startsWith("gap-")) return "gap";
   return null;
 }
 
-export function resolveToProperties(utility: string, _context?: TailwindContext | null): string[] {
+export function resolveToProperties(
+  utility: string,
+  _context?: TailwindContext | null
+): string[] {
   const token = { raw: utility, variants: [], utility };
   const prop = resolveUtilityProperty(token);
   return prop ? [prop] : [];
 }
 
 export const ruleBasedResolver: UtilityResolver = {
-  resolveToProperties(utility: string, context?: TailwindContext | null): string[] {
+  resolveToProperties(
+    utility: string,
+    context?: TailwindContext | null
+  ): string[] {
     return resolveToProperties(utility, context);
   }
 };
@@ -82,7 +116,10 @@ function hasToken(classList: string[], token: string): boolean {
   return classList.includes(token);
 }
 
-function isImpossibleCombination(previous: UtilityToken, current: UtilityToken): boolean {
+function isImpossibleCombination(
+  previous: UtilityToken,
+  current: UtilityToken
+): boolean {
   return (
     DISPLAY_IMPOSSIBLE.has(previous.utility) &&
     DISPLAY_IMPOSSIBLE.has(current.utility) &&
@@ -99,9 +136,17 @@ export function classifyPairConflict(
     return { kind: "redundancy", property: resolveUtilityProperty(current) };
   }
 
-  const normalizedPrevious = normalizeForMerge(previous.raw, options.tailwindPrefix);
-  const normalizedCurrent = normalizeForMerge(current.raw, options.tailwindPrefix);
-  const mergedOutput = splitClassString(twMerge(`${normalizedPrevious} ${normalizedCurrent}`));
+  const normalizedPrevious = normalizeForMerge(
+    previous.raw,
+    options.tailwindPrefix
+  );
+  const normalizedCurrent = normalizeForMerge(
+    current.raw,
+    options.tailwindPrefix
+  );
+  const mergedOutput = splitClassString(
+    twMerge(`${normalizedPrevious} ${normalizedCurrent}`)
+  );
   const hasPrevious = hasToken(mergedOutput, normalizedPrevious);
   const hasCurrent = hasToken(mergedOutput, normalizedCurrent);
 
@@ -110,12 +155,17 @@ export function classifyPairConflict(
   }
 
   if (!hasPrevious && !hasCurrent) {
-    return { kind: "impossible-combination", property: resolveUtilityProperty(current) };
+    return {
+      kind: "impossible-combination",
+      property: resolveUtilityProperty(current)
+    };
   }
 
   if (!hasPrevious && hasCurrent) {
     return {
-      kind: isImpossibleCombination(previous, current) ? "impossible-combination" : "override",
+      kind: isImpossibleCombination(previous, current)
+        ? "impossible-combination"
+        : "override",
       property: resolveUtilityProperty(current)
     };
   }
@@ -130,5 +180,7 @@ function normalizeForMerge(raw: string, tailwindPrefix?: string): string {
     return raw;
   }
   const normalizedUtility = parsed.utility.slice(tailwindPrefix.length);
-  return parsed.variants.length ? `${parsed.variants.join(":")}:${normalizedUtility}` : normalizedUtility;
+  return parsed.variants.length
+    ? `${parsed.variants.join(":")}:${normalizedUtility}`
+    : normalizedUtility;
 }

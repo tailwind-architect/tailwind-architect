@@ -18,21 +18,21 @@ npm install @tailwind-architect/shared
 
 ### Constants
 
-| Export | Description |
-|--------|-------------|
+| Export              | Description                                                                                                                               |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `SOURCE_EXTENSIONS` | `Set<string>` — File extensions scanned for Tailwind classes (`.ts`, `.tsx`, `.js`, `.jsx`, `.mjs`, `.cjs`, `.vue`, `.astro`, `.svelte`). |
-| `IGNORE_DIRS` | `Set<string>` — Directory names excluded from project scans (`node_modules`, `.git`, `dist`, `coverage`, `.next`, `.turbo`). |
+| `IGNORE_DIRS`       | `Set<string>` — Directory names excluded from project scans (`node_modules`, `.git`, `dist`, `coverage`, `.next`, `.turbo`).              |
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `AnalyzerConfig` | Full config (feature flags + `classFunctions`, `plugins`). |
-| `FeatureFlags` | `sortClasses`, `removeRedundant`, `detectConflicts`, `readabilityMode`, `autoFix`. |
-| `ProjectAnalysis` | Result of a project-wide scan: `filesScanned`, `filesWithIssues`, counts, `perFile`, `parseErrors`, `duplicatePatterns`. |
-| `FileIssue` | Per-file summary: `filePath`, `conflictCount`, `redundancyCount`, `suggestionCount`. |
-| `FileParseError` | Parse error: `filePath`, `message`. |
-| `DuplicatePattern` | Repeated class sequence: `pattern`, `occurrences`, `filePaths`. |
+| Type               | Description                                                                                                              |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `AnalyzerConfig`   | Full config (feature flags + `classFunctions`, `plugins`).                                                               |
+| `FeatureFlags`     | `sortClasses`, `removeRedundant`, `detectConflicts`, `readabilityMode`, `autoFix`.                                       |
+| `ProjectAnalysis`  | Result of a project-wide scan: `filesScanned`, `filesWithIssues`, counts, `perFile`, `parseErrors`, `duplicatePatterns`. |
+| `FileIssue`        | Per-file summary: `filePath`, `conflictCount`, `redundancyCount`, `suggestionCount`.                                     |
+| `FileParseError`   | Parse error: `filePath`, `message`.                                                                                      |
+| `DuplicatePattern` | Repeated class sequence: `pattern`, `occurrences`, `filePaths`.                                                          |
 
 ---
 

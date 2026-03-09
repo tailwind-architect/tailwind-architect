@@ -17,14 +17,20 @@ function valueFromPrefix(utility: string, prefix: string): string | null {
   return utility.startsWith(prefix) ? utility.slice(prefix.length) : null;
 }
 
-export function detectOptimizationSuggestions(tokens: UtilityToken[]): Suggestion[] {
+export function detectOptimizationSuggestions(
+  tokens: UtilityToken[]
+): Suggestion[] {
   const suggestions: Suggestion[] = [];
   const seen = new Set<string>();
   const tokenSet = new Set(tokens.map((token) => token.raw));
 
   for (const pair of AXIS_PAIRS) {
-    const firstMatches = tokens.filter((token) => token.utility.startsWith(pair.first));
-    const secondMatches = tokens.filter((token) => token.utility.startsWith(pair.second));
+    const firstMatches = tokens.filter((token) =>
+      token.utility.startsWith(pair.first)
+    );
+    const secondMatches = tokens.filter((token) =>
+      token.utility.startsWith(pair.second)
+    );
 
     for (const first of firstMatches) {
       const firstValue = valueFromPrefix(first.utility, pair.first);
@@ -32,7 +38,10 @@ export function detectOptimizationSuggestions(tokens: UtilityToken[]): Suggestio
 
       const second = secondMatches.find((item) => {
         const secondValue = valueFromPrefix(item.utility, pair.second);
-        return secondValue === firstValue && item.variants.join(":") === first.variants.join(":");
+        return (
+          secondValue === firstValue &&
+          item.variants.join(":") === first.variants.join(":")
+        );
       });
       if (!second) continue;
 

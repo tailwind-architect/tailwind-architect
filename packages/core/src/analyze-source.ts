@@ -89,11 +89,14 @@ function processClassValue(
   const pluginKey = plugins?.map((p) => p.name).join(",") ?? "";
   const sortClasses = config.sortClasses !== false;
   const cacheKey = `${tailwindPrefix ?? ""}|${pluginKey}|${sortClasses}|${config.removeRedundant}|${config.detectConflicts}|${config.readabilityMode}|${classValue}`;
-  const analysis = analysisCache.get(cacheKey) ?? analyzeClassList(classList, config, { tailwindPrefix, plugins });
+  const analysis =
+    analysisCache.get(cacheKey) ??
+    analyzeClassList(classList, config, { tailwindPrefix, plugins });
   analysisCache.set(cacheKey, analysis);
   stats.conflictCount += analysis.conflicts.length;
   stats.redundancyCount += analysis.redundantRemoved.length;
-  stats.suggestionCount += analysis.suggestions.length + (analysis.pluginLints?.length ?? 0);
+  stats.suggestionCount +=
+    analysis.suggestions.length + (analysis.pluginLints?.length ?? 0);
   stats.classesTouched += 1;
 
   const transformed = config.readabilityMode
@@ -121,7 +124,11 @@ function queueStringLiteralReplacement(
   replacements: Array<{ start: number; end: number; value: string }>
 ): boolean {
   if (node.start == null || node.end == null) return false;
-  replacements.push({ start: node.start, end: node.end, value: JSON.stringify(value) });
+  replacements.push({
+    start: node.start,
+    end: node.end,
+    value: JSON.stringify(value)
+  });
   return true;
 }
 
@@ -135,7 +142,11 @@ function queueTemplateReplacement(
   replacements: Array<{ start: number; end: number; value: string }>
 ): boolean {
   if (node.start == null || node.end == null) return false;
-  replacements.push({ start: node.start, end: node.end, value: `\`${escapeTemplateValue(value)}\`` });
+  replacements.push({
+    start: node.start,
+    end: node.end,
+    value: `\`${escapeTemplateValue(value)}\``
+  });
   return true;
 }
 
@@ -165,7 +176,14 @@ function visitExpressionForClassStrings(
     if (extracted && extracted.classes.length > 0) {
       classNodes.push(extracted);
     }
-    const next = processClassValue(node.value, config, stats, analysisCache, tailwindPrefix, plugins);
+    const next = processClassValue(
+      node.value,
+      config,
+      stats,
+      analysisCache,
+      tailwindPrefix,
+      plugins
+    );
     if (next !== node.value && applyFixes) {
       changed = queueStringLiteralReplacement(node, next, replacements);
     }
@@ -181,7 +199,14 @@ function visitExpressionForClassStrings(
     if (extracted && extracted.classes.length > 0) {
       classNodes.push(extracted);
     }
-    const next = processClassValue(value, config, stats, analysisCache, tailwindPrefix, plugins);
+    const next = processClassValue(
+      value,
+      config,
+      stats,
+      analysisCache,
+      tailwindPrefix,
+      plugins
+    );
     if (next !== value && applyFixes) {
       changed = queueTemplateReplacement(node, next, replacements);
     }
@@ -306,8 +331,13 @@ function visitExpressionForClassStrings(
   return changed;
 }
 
-function isClassAttribute(name: t.JSXIdentifier | t.JSXNamespacedName): boolean {
-  return t.isJSXIdentifier(name) && (name.name === "className" || name.name === "class");
+function isClassAttribute(
+  name: t.JSXIdentifier | t.JSXNamespacedName
+): boolean {
+  return (
+    t.isJSXIdentifier(name) &&
+    (name.name === "className" || name.name === "class")
+  );
 }
 
 type AnalyzeSourceOptions = {
@@ -318,8 +348,13 @@ type AnalyzeSourceOptions = {
   filename?: string;
 };
 
-function readTailwindPrefix(context: TailwindContext | null | undefined): string | undefined {
-  const resolved = context?.resolvedConfig as { prefix?: unknown } | null | undefined;
+function readTailwindPrefix(
+  context: TailwindContext | null | undefined
+): string | undefined {
+  const resolved = context?.resolvedConfig as
+    | { prefix?: unknown }
+    | null
+    | undefined;
   return typeof resolved?.prefix === "string" && resolved.prefix.length > 0
     ? resolved.prefix
     : undefined;
@@ -333,7 +368,9 @@ export function analyzeSourceCode(
   const tailwindPrefix = readTailwindPrefix(options.tailwindContext);
   const plugins = options.plugins;
   const filename = options.filename ?? "module.tsx";
-  const sourceType = /\.(tsx?|jsx?|mts|mjs|cjs)$/i.test(filename) ? "module" : "unambiguous";
+  const sourceType = /\.(tsx?|jsx?|mts|mjs|cjs)$/i.test(filename)
+    ? "module"
+    : "unambiguous";
   const ast = parse(code, {
     sourceType,
     plugins: ["jsx", "typescript", "decorators-legacy"],
@@ -353,12 +390,27 @@ export function analyzeSourceCode(
   const visited = new Set<string>();
   const applyFixes = options.applyFixes ?? true;
   let changed = false;
-  const tr = traverseLib as unknown as { default?: ((tree: t.File, v: TraverseOptions<t.Node>) => void) | { default?: (tree: t.File, v: TraverseOptions<t.Node>) => void } };
+  const tr = traverseLib as unknown as {
+    default?:
+      | ((tree: t.File, v: TraverseOptions<t.Node>) => void)
+      | { default?: (tree: t.File, v: TraverseOptions<t.Node>) => void };
+  };
   const cand = tr?.default;
   const traverseFn =
     (typeof cand === "function" ? cand : undefined) ??
-    (typeof (cand as { default?: unknown } | undefined)?.default === "function" ? (cand as { default: (tree: t.File, visitor: TraverseOptions<t.Node>) => void }).default : undefined) ??
-    (typeof traverseLib === "function" ? (traverseLib as (tree: t.File, visitor: TraverseOptions<t.Node>) => void) : undefined);
+    (typeof (cand as { default?: unknown } | undefined)?.default === "function"
+      ? (
+          cand as {
+            default: (tree: t.File, visitor: TraverseOptions<t.Node>) => void;
+          }
+        ).default
+      : undefined) ??
+    (typeof traverseLib === "function"
+      ? (traverseLib as (
+          tree: t.File,
+          visitor: TraverseOptions<t.Node>
+        ) => void)
+      : undefined);
   if (typeof traverseFn !== "function") {
     return { code, changed: false, stats, classNodes };
   }
@@ -372,7 +424,10 @@ export function analyzeSourceCode(
       if (!isClassAttribute(path.node.name) || !path.node.value) return;
 
       if (t.isStringLiteral(path.node.value)) {
-        const extracted = classNodeForValue(path.node.value, path.node.value.value);
+        const extracted = classNodeForValue(
+          path.node.value,
+          path.node.value.value
+        );
         if (extracted && extracted.classes.length > 0) {
           classNodes.push(extracted);
         }
@@ -385,7 +440,11 @@ export function analyzeSourceCode(
           plugins
         );
         if (applyFixes) {
-          const queued = queueStringLiteralReplacement(path.node.value, next, replacements);
+          const queued = queueStringLiteralReplacement(
+            path.node.value,
+            next,
+            replacements
+          );
           if (queued && next !== path.node.value.value) changed = true;
         }
         return;
@@ -413,7 +472,8 @@ export function analyzeSourceCode(
     CallExpression(path: NodePath<t.CallExpression>) {
       if (!t.isIdentifier(path.node.callee)) return;
       const classFns = config.classFunctions ?? [];
-      if (!Array.isArray(classFns) || !classFns.includes(path.node.callee.name)) return;
+      if (!Array.isArray(classFns) || !classFns.includes(path.node.callee.name))
+        return;
 
       for (const arg of path.node.arguments) {
         if (!t.isExpression(arg)) continue;
@@ -468,6 +528,7 @@ export function emptyProjectAnalysis(): ProjectAnalysis {
     suggestionCount: 0,
     parseErrorCount: 0,
     parseErrors: [],
-    perFile: []
+    perFile: [],
+    log: []
   };
 }

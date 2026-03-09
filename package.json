@@ -10,12 +10,19 @@
     "build": "npm run build --workspace @tailwind-architect/shared && npm run build --workspace @tailwind-architect/core && npm run build --workspace tailwind-architect && npm run build --workspace tailwind-architect-vscode",
     "test": "npm run test --workspace @tailwind-architect/core && npm run test --workspace tailwind-architect",
     "typecheck": "npm run typecheck --workspace @tailwind-architect/core && npm run typecheck --workspace tailwind-architect",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "benchmark": "node packages/cli/dist/cli.js analyze ."
   },
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
     "@types/babel__traverse": "^7.28.0",
     "@types/node": "^24.5.2",
+    "eslint": "^9.15.0",
+    "prettier": "^3.4.2",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.15.0",
     "vitest": "^3.2.4"
   },
   "engines": {

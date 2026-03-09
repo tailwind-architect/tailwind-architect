@@ -4,23 +4,23 @@ Version: 1.0\
 Goal: Build the most robust Tailwind productivity tool for modern
 frontend ecosystems.
 
-------------------------------------------------------------------------
+---
 
 # 1. Vision
 
 Tailwind Architect is a developer productivity platform designed to:
 
--   improve readability of Tailwind code
--   detect conflicts and redundancy
--   safely refactor Tailwind usage
--   support modern frontend ecosystems
--   operate safely on very large repositories
--   remain compatible with Tailwind v3, v4 and future releases
+- improve readability of Tailwind code
+- detect conflicts and redundancy
+- safely refactor Tailwind usage
+- support modern frontend ecosystems
+- operate safely on very large repositories
+- remain compatible with Tailwind v3, v4 and future releases
 
 The system must never break application logic and must operate using AST
 transformations instead of unsafe text replacements.
 
-------------------------------------------------------------------------
+---
 
 # 2. Product Scope
 
@@ -37,7 +37,7 @@ future ESLint plugin
 
 All tools share the same analysis and transformation engine.
 
-------------------------------------------------------------------------
+---
 
 # 3. Target Users
 
@@ -60,7 +60,7 @@ Tertiary:
 
 Design systems teams maintaining large UI codebases.
 
-------------------------------------------------------------------------
+---
 
 # 4. Key Product Capabilities
 
@@ -89,7 +89,7 @@ visual\
 effects\
 misc
 
-------------------------------------------------------------------------
+---
 
 ## 4.2 Redundancy Removal
 
@@ -103,7 +103,7 @@ Result
 
 p-4
 
-------------------------------------------------------------------------
+---
 
 ## 4.3 Conflict Detection
 
@@ -119,7 +119,7 @@ display conflict\
 color override\
 size override
 
-------------------------------------------------------------------------
+---
 
 ## 4.4 Optimization Suggestions
 
@@ -133,7 +133,7 @@ Suggested
 
 py-4
 
-------------------------------------------------------------------------
+---
 
 ## 4.5 Readability Mode
 
@@ -144,7 +144,7 @@ Example
 className=" flex flex-col items-center w-full max-w-xl p-6 gap-4
 bg-white rounded shadow "
 
-------------------------------------------------------------------------
+---
 
 ## 4.6 CLI Project Analysis
 
@@ -160,7 +160,7 @@ Example output
 12 conflicts\
 18 optimization suggestions
 
-------------------------------------------------------------------------
+---
 
 ## 4.7 CI Mode
 
@@ -172,7 +172,7 @@ tailwind-architect lint
 
 Exit code non-zero if issues found.
 
-------------------------------------------------------------------------
+---
 
 # 5. Modern Tailwind Ecosystem Support
 
@@ -195,7 +195,7 @@ User configurable functions:
 
 { "classFunctions": \["clsx","cn","cva","tw"\] }
 
-------------------------------------------------------------------------
+---
 
 # 6. Tailwind Syntax Support
 
@@ -218,7 +218,7 @@ Variant stack parsing:
 
 variantStack → utility
 
-------------------------------------------------------------------------
+---
 
 ## Arbitrary Values
 
@@ -230,7 +230,7 @@ grid-cols-\[1fr_2fr\]
 
 Parser must support arbitrary tokens.
 
-------------------------------------------------------------------------
+---
 
 ## Compound Variants
 
@@ -242,7 +242,7 @@ Stack
 
 \[md, hover\] → bg-red-500
 
-------------------------------------------------------------------------
+---
 
 # 7. Code Parsing Strategy
 
@@ -262,7 +262,7 @@ safe transformations\
 preserve formatting\
 detect nested expressions
 
-------------------------------------------------------------------------
+---
 
 # 8. Class Extraction Targets
 
@@ -284,7 +284,7 @@ clsx("flex p-4", active && "bg-red-500")
 
 active ? "bg-red-500" : "bg-gray-500"
 
-------------------------------------------------------------------------
+---
 
 # 9. Tailwind Engine Integration
 
@@ -303,7 +303,7 @@ plugin compatibility\
 custom theme support\
 future version compatibility
 
-------------------------------------------------------------------------
+---
 
 # 10. Conflict Detection Engine
 
@@ -323,7 +323,7 @@ bg-blue-500
 
 Both affect background-color.
 
-------------------------------------------------------------------------
+---
 
 # 11. Redundancy Detection
 
@@ -341,7 +341,7 @@ padding-all \> padding-y
 margin-all \> margin-x\
 margin-all \> margin-y
 
-------------------------------------------------------------------------
+---
 
 # 12. Safety Guards
 
@@ -353,7 +353,7 @@ bg-\${color}-500
 
 These cannot be safely refactored.
 
-------------------------------------------------------------------------
+---
 
 # 13. Configuration System
 
@@ -367,7 +367,7 @@ Example
 "readabilityMode": false, "autoFix": true, "classFunctions":
 \["clsx","cn","cva"\] }
 
-------------------------------------------------------------------------
+---
 
 # 14. Feature Flags
 
@@ -379,7 +379,7 @@ detectConflicts\
 readabilityMode\
 autoFix
 
-------------------------------------------------------------------------
+---
 
 # 15. Monorepo Support
 
@@ -398,7 +398,7 @@ turborepo\
 pnpm workspaces\
 yarn workspaces
 
-------------------------------------------------------------------------
+---
 
 # 16. Performance Strategy
 
@@ -415,7 +415,7 @@ Cache key
 
 projectRoot + tailwindConfigHash
 
-------------------------------------------------------------------------
+---
 
 # 17. CLI Architecture
 
@@ -437,7 +437,7 @@ Lint
 
 Return CI-compatible results.
 
-------------------------------------------------------------------------
+---
 
 # 18. VSCode / Cursor Extension
 
@@ -452,7 +452,7 @@ Example command
 
 Tailwind Architect: Fix Classes
 
-------------------------------------------------------------------------
+---
 
 # 19. Duplicate UI Detection (Advanced Feature)
 
@@ -470,7 +470,7 @@ Example
 
 InlineRow component
 
-------------------------------------------------------------------------
+---
 
 # 20. Plugin System
 
@@ -486,7 +486,7 @@ custom rules\
 custom sorting groups\
 custom lint rules
 
-------------------------------------------------------------------------
+---
 
 # 21. Framework Compatibility
 
@@ -501,7 +501,7 @@ SolidJS
 
 Parser must detect framework-specific syntax.
 
-------------------------------------------------------------------------
+---
 
 # 22. Testing Strategy
 
@@ -513,7 +513,7 @@ large repository simulations\
 performance benchmarks\
 Tailwind version compatibility tests
 
-------------------------------------------------------------------------
+---
 
 # 23. Telemetry (Optional)
 
@@ -526,7 +526,7 @@ performance metrics
 
 Must be opt-in.
 
-------------------------------------------------------------------------
+---
 
 # 24. Developer Experience Goals
 
@@ -537,7 +537,7 @@ improve Tailwind readability\
 provide actionable suggestions\
 avoid noisy warnings
 
-------------------------------------------------------------------------
+---
 
 # 25. Roadmap
 
@@ -561,7 +561,7 @@ Phase 4
 
 plugin ecosystem
 
-------------------------------------------------------------------------
+---
 
 # 26. Summary
 

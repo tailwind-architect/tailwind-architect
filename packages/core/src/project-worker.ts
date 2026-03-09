@@ -24,7 +24,11 @@ type ResultMessage = {
   output: {
     code: string;
     changed: boolean;
-    stats: { conflictCount: number; redundancyCount: number; suggestionCount: number };
+    stats: {
+      conflictCount: number;
+      redundancyCount: number;
+      suggestionCount: number;
+    };
     classStrings?: string[];
   } | null;
   error: string | null;
@@ -38,13 +42,16 @@ async function processOne(
   const code = await readFile(filePath, "utf8");
   const dir = dirname(filePath);
   const tailwindContext = await loadTailwindContext(dir);
-  const plugins = config.plugins?.length ? await loadPlugins(dir, config.plugins) : undefined;
+  const plugins = config.plugins?.length
+    ? await loadPlugins(dir, config.plugins)
+    : undefined;
   const applyFixes = mode === "fix" && config.autoFix;
   const adapter = getAdapterForExtension(extname(filePath));
   if (adapter) {
     const spans = await adapter(filePath, code);
-    const prefix =
-      (tailwindContext?.resolvedConfig as { prefix?: string } | undefined)?.prefix;
+    const prefix = (
+      tailwindContext?.resolvedConfig as { prefix?: string } | undefined
+    )?.prefix;
     const result = await analyzeSourceWithAdapter(code, config, spans, {
       tailwindPrefix: prefix,
       applyFixes,

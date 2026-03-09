@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { analyzeSourceCode, extractClassNodesFromSource } from "../src/analyze-source.js";
+import {
+  analyzeSourceCode,
+  extractClassNodesFromSource
+} from "../src/analyze-source.js";
 import { defaultConfig } from "../src/config.js";
 
 describe("analyzeSourceCode", () => {
@@ -8,7 +11,9 @@ describe("analyzeSourceCode", () => {
     const output = analyzeSourceCode(source, defaultConfig);
 
     expect(output.changed).toBe(true);
-    expect(output.code).toContain(`className="flex justify-center w-full p-4 bg-white"`);
+    expect(output.code).toContain(
+      `className="flex justify-center w-full p-4 bg-white"`
+    );
   });
 
   it("rewrites static strings inside class helper calls", () => {
@@ -70,7 +75,10 @@ export default function LoginPage() {
   it("applies readability mode formatting for long class sets", () => {
     const source =
       'const App = () => <div className="flex items-center justify-center w-full max-w-xl p-6 gap-4 bg-white rounded shadow" />;';
-    const output = analyzeSourceCode(source, { ...defaultConfig, readabilityMode: true });
+    const output = analyzeSourceCode(source, {
+      ...defaultConfig,
+      readabilityMode: true
+    });
     expect(output.changed).toBe(true);
     expect(output.code).toContain("\\n");
   });

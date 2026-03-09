@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { cwd, exit } from "node:process";
+import { stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { analyzeProject, loadArchitectConfig } from "@tailwind-architect/core";
 
@@ -49,8 +50,29 @@ function parseArgv(argv: string[]): CliOptions {
   return { command, rootDir, maxWorkers, dryRun, reportJson };
 }
 
+async function ensureRootDirExists(rootDir: string): Promise<void> {
+  try {
+    const st = await stat(rootDir);
+    if (!st.isDirectory()) {
+      console.error(`Tailwind Architect: "${rootDir}" is not a directory.`);
+      exit(1);
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    if (message.includes("ENOENT")) {
+      console.error(`Tailwind Architect: directory not found: ${rootDir}`);
+    } else {
+      console.error(`Tailwind Architect: cannot read "${rootDir}": ${message}`);
+    }
+    exit(1);
+  }
+}
+
 async function run(): Promise<void> {
-  const { command, rootDir, maxWorkers, dryRun, reportJson } = parseArgv(process.argv);
+  const { command, rootDir, maxWorkers, dryRun, reportJson } = parseArgv(
+    process.argv
+  );
+  await ensureRootDirExists(rootDir);
   const config = await loadArchitectConfig(rootDir);
 
   const { report, changedFiles } = await analyzeProject({
@@ -73,6 +95,9 @@ async function run(): Promise<void> {
       parseErrors: report.parseErrors,
       perFile: report.perFile,
       duplicatePatterns: report.duplicatePatterns ?? [],
+      truncated: report.truncated ?? false,
+      filesLimit: report.filesLimit ?? null,
+      log: report.log ?? [],
       ...(command === "fix" ? { changedFiles } : {})
     };
     console.log(JSON.stringify(payload, null, 0));

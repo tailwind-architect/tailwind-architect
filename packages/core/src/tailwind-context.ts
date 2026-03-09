@@ -68,9 +68,16 @@ async function hashFile(path: string): Promise<string> {
   return createHash("sha1").update(content).digest("hex");
 }
 
-async function detectTailwindVersionAsync(projectRoot: string): Promise<TailwindVersion> {
+async function detectTailwindVersionAsync(
+  projectRoot: string
+): Promise<TailwindVersion> {
   try {
-    const pkgPath = join(projectRoot, "node_modules", "tailwindcss", "package.json");
+    const pkgPath = join(
+      projectRoot,
+      "node_modules",
+      "tailwindcss",
+      "package.json"
+    );
     const content = await readFile(pkgPath, "utf8");
     const pkg = JSON.parse(content) as { version?: string };
     const ver = pkg.version ?? "";
@@ -88,19 +95,26 @@ async function resolveWithV3Style(
 ): Promise<unknown> {
   if (configModule == null) return null;
   const resolveConfigModuleId = "tailwindcss/resolveConfig.js";
-  let resolveConfigModule: { default?: (config: unknown) => unknown } | undefined;
+  let resolveConfigModule:
+    | { default?: (config: unknown) => unknown }
+    | undefined;
   try {
-    resolveConfigModule = await import(resolveConfigModuleId) as { default?: (config: unknown) => unknown };
+    resolveConfigModule = (await import(resolveConfigModuleId)) as {
+      default?: (config: unknown) => unknown;
+    };
   } catch {
     return null;
   }
   const resolveConfig = resolveConfigModule?.default ?? resolveConfigModule;
   if (typeof resolveConfig !== "function") return null;
-  const config = (configModule as { default?: unknown }).default ?? configModule;
+  const config =
+    (configModule as { default?: unknown }).default ?? configModule;
   return resolveConfig(config);
 }
 
-export async function loadTailwindContext(startDir: string): Promise<TailwindContext | null> {
+export async function loadTailwindContext(
+  startDir: string
+): Promise<TailwindContext | null> {
   const configPath = await findTailwindConfig(startDir);
   if (!configPath) {
     return null;
@@ -123,7 +137,8 @@ export async function loadTailwindContext(startDir: string): Promise<TailwindCon
     if (configModule == null) {
       throw new Error("Config module empty");
     }
-    const rawConfig = (configModule as { default?: unknown }).default ?? configModule;
+    const rawConfig =
+      (configModule as { default?: unknown }).default ?? configModule;
     let resolvedConfig: unknown;
 
     try {

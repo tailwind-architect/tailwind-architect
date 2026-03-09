@@ -15,7 +15,13 @@ describe("tokenize", () => {
   });
 
   it("splits class strings while respecting arbitrary containers", () => {
-    const classes = splitClassString("bg-[url(http://a:b)] p-4 md:hover:bg-red-500");
-    expect(classes).toEqual(["bg-[url(http://a:b)]", "p-4", "md:hover:bg-red-500"]);
+    const classes = splitClassString(
+      "bg-[url(http://a:b)] p-4 md:hover:bg-red-500"
+    );
+    expect(classes).toEqual([
+      "bg-[url(http://a:b)]",
+      "p-4",
+      "md:hover:bg-red-500"
+    ]);
   });
 });

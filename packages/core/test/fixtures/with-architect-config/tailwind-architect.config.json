@@ -1,0 +1,6 @@
+{
+  "sortClasses": true,
+  "removeRedundant": false,
+  "classFunctions": ["cn", "clsx"],
+  "plugins": ["some-plugin"]
+}
