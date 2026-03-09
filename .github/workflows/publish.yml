@@ -57,5 +57,11 @@ jobs:
         run: cd packages/vscode-extension && vsce package --no-dependencies
 
       - name: Publish extension to Marketplace
-        if: ${{ secrets.VSCE_TOKEN != '' }}
-        run: cd packages/vscode-extension && vsce publish --pat ${{ secrets.VSCE_TOKEN }}
+        env:
+          VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+        run: |
+          if [ -n "$VSCE_TOKEN" ]; then
+            cd packages/vscode-extension && vsce publish --pat "$VSCE_TOKEN"
+          else
+            echo "VSCE_TOKEN not set, skipping extension publish"
+          fi
