@@ -7,3 +7,4 @@ out
 package-lock.json
 website/.vitepress/cache
 packages/core/test/fixtures/with-invalid-config/
+packages/core/test/fixtures/with-malformed-config/
