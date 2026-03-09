@@ -4,7 +4,7 @@
 
 **CLI for analyzing and fixing Tailwind CSS classes** — sort utilities, remove redundant classes, detect conflicts, and apply optimizations across your codebase. Uses an AST-first engine that understands Tailwind v3/v4 and supports JSX, Vue, Astro, and Svelte.
 
-Part of the [Tailwind Architect](https://github.com/vitoriowingert/tailwind-architect) toolchain. Use this CLI for CI, scripts, and batch fixes; use the [VS Code / Cursor extension](https://marketplace.visualstudio.com/) for in-editor diagnostics and quick fixes.
+Part of the [Tailwind Architect](https://github.com/vitoriowingert/tailwind-architect) toolchain. Use this CLI for CI, scripts, and batch fixes; use the [VS Code / Cursor extension](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode) for in-editor diagnostics and quick fixes.
 
 ---
 
@@ -164,7 +164,7 @@ See the [core package](https://www.npmjs.com/package/@tailwind-architect/core) a
 
 - **Repository:** [tailwind-architect](https://github.com/vitoriowingert/tailwind-architect)
 - **Docs / guide:** [vitoriowingert.github.io/tailwind-architect](https://vitoriowingert.github.io/tailwind-architect/)
-- **VS Code / Cursor extension:** [Tailwind Architect](https://marketplace.visualstudio.com/) — diagnostics, quick fix, “Fix Classes”, “Fix Workspace”, optional format on save
+- **VS Code / Cursor extension:** [Tailwind Architect](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode) — diagnostics, quick fix, “Fix Classes”, “Fix Workspace”, optional format on save
 - **Core API (npm):** [@tailwind-architect/core](https://www.npmjs.com/package/@tailwind-architect/core)
 
 ---

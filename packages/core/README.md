@@ -1,6 +1,6 @@
 # @tailwind-architect/core
 
-Analysis and transformation engine for Tailwind CSS class strings. Powers the [tailwind-architect](https://www.npmjs.com/package/tailwind-architect) CLI and the [VS Code / Cursor extension](https://marketplace.visualstudio.com/). Use this package when you need to analyze or fix Tailwind classes programmatically (e.g. custom tooling, build steps, or integrations).
+Analysis and transformation engine for Tailwind CSS class strings. Powers the [tailwind-architect](https://www.npmjs.com/package/tailwind-architect) CLI and the [VS Code / Cursor extension](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode). Use this package when you need to analyze or fix Tailwind classes programmatically (e.g. custom tooling, build steps, or integrations).
 
 **Features:** tokenize utilities, detect conflicts and redundancy, sort classes, suggest optimizations (e.g. merge-axis), duplicate-pattern detection, framework adapters (Vue, Astro, Svelte), and a plugin system. Works with Tailwind v3 and v4.
 

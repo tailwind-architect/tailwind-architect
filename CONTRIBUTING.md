@@ -24,7 +24,14 @@ Thanks for your interest in contributing.
    npm run test
    ```
 
-4. Typecheck:
+4. Lint and format check:
+
+   ```bash
+   npm run lint
+   npm run format:check
+   ```
+
+5. Typecheck:
 
    ```bash
    npm run typecheck
@@ -52,7 +59,7 @@ To build a custom plugin, implement the `TailwindArchitectPlugin` contract (see 
 
 ## Code style
 
-- TypeScript with strict mode.
+- TypeScript with strict mode; ESLint (flat config) and Prettier are used — run `npm run lint` and `npm run format:check` (or `npm run format` to fix).
 - Prefer clear names and small functions; avoid duplication.
 - Add or update tests for behavior changes.
 

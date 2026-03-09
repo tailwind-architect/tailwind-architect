@@ -10,7 +10,8 @@
 - **Suggest optimizations** — e.g. merge `pt-4` + `pb-4` → `py-4` (within variant scope).
 - **Duplicate patterns** — See repeated class patterns across files to extract components or utilities.
 - **Multi-framework** — JS/TS/JSX/TSX, Vue, Astro, Svelte via adapters.
-- **Plugins** — Custom lint rules, sort groups, and suggestions.
+- **Plugins** — Custom lint rules, sort groups, and suggestions (loaded safely from `node_modules`).
+- **Validated config** — `tailwind-architect.config.json` is validated (Zod); invalid fields fall back to defaults.
 
 Use it via **CLI** (`analyze`, `fix`, `lint`) or the **VSCode/Cursor extension** (diagnostics, quick fix, format on save, fix workspace).
 

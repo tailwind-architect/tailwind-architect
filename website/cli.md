@@ -20,11 +20,11 @@ tailwind-architect <command> [path]
 
 - **`--max-workers N`** — Max concurrent file operations (default: CPU count). Use a lower value if you hit memory limits.
 - **`--dry-run`** — For `fix`: compute and report changes but do not write files.
-- **`--report json`** — Output machine-readable JSON (includes `filesScanned`, `conflictCount`, `redundancyCount`, `suggestionCount`, `duplicatePatterns`, `perFile`, `parseErrors`, and for `fix` the list of `changedFiles`).
+- **`--report json`** — Output machine-readable JSON: `filesScanned`, `conflictCount`, `redundancyCount`, `suggestionCount`, `duplicatePatterns`, `perFile`, `parseErrors`, `truncated`, `filesLimit`, `log` (array of `{ level, message }`), and for `fix` the list of `changedFiles`.
 
 ## Exit codes
 
-- **`lint`** — Exits with `1` when there are conflicts, redundancy, suggestions, duplicate patterns, or parse errors; otherwise `0`. Use in CI to fail the build.
+- **`lint`** — Exits with `1` when there are conflicts, redundancy, suggestions, duplicate patterns, or parse errors; otherwise `0`. Use in CI to fail the build. For GitHub Actions examples and JSON report details, see [CI usage](https://github.com/vitoriowingert/tailwind-architect/blob/main/docs/ci.md) in the repo.
 
 ## Examples
 

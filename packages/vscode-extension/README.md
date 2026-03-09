@@ -2,7 +2,7 @@
 
 Analyze and fix Tailwind CSS classes directly in your editor: sort utilities, remove redundancy, detect conflicts, and apply optimization suggestions.
 
-Part of the [Tailwind Architect](https://github.com/vitoriowingert/tailwind-architect) toolchain. Use this extension in VS Code or Cursor; use the [CLI](https://www.npmjs.com/package/tailwind-architect) for CI and batch fixes.
+Part of the [Tailwind Architect](https://github.com/vitoriowingert/tailwind-architect) toolchain. Use this extension in VS Code or Cursor; use the [CLI](https://www.npmjs.com/package/tailwind-architect) for CI and batch fixes. Install from the [Marketplace](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode) or from the built `.vsix` in the repo.
 
 ---
 

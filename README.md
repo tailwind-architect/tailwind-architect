@@ -12,7 +12,7 @@ AST-first tooling for safe Tailwind class analysis and refactoring.
 
 - `@tailwind-architect/core`: analysis + transformation engine
 - `tailwind-architect`: CLI (`analyze`, `fix`, `lint`)
-- `tailwind-architect-vscode`: VSCode/Cursor extension (diagnostics, quick fix, command “Tailwind Architect: Fix Classes”, optional format on save)
+- `tailwind-architect-vscode`: VSCode/Cursor extension (diagnostics, quick fix, Fix Classes, Fix Workspace, optional format on save and span-level diagnostics)
 
 ## Quick start
 
@@ -33,7 +33,8 @@ Create `tailwind-architect.config.json` at repository root:
   "detectConflicts": true,
   "readabilityMode": false,
   "autoFix": true,
-  "classFunctions": ["clsx", "cn", "cva", "tw"]
+  "classFunctions": ["clsx", "cn", "cva", "tw"],
+  "plugins": []
 }
 ```
 
@@ -50,7 +51,7 @@ Options:
 - **`[path]`** — Directory to scan (default: current directory).
 - **`--max-workers N`** — Max concurrent file operations (default: CPU count).
 - **`--dry-run`** — For `fix`: compute changes but do not write files.
-- **`--report json`** — Output machine-readable JSON instead of human-readable summary.
+- **`--report json`** — Output machine-readable JSON (includes `log`, `truncated`, `filesLimit`, and full report; see [docs/ci.md](docs/ci.md)).
 
 **Exit codes:** `lint` exits with `1` when there are issues (conflicts, redundancy, suggestions, or parse errors); otherwise `0`. Use in CI to fail the build. See [docs/ci.md](docs/ci.md) for examples.
 
@@ -65,7 +66,7 @@ Options:
 
 Releases follow [Semantic Versioning](https://semver.org/). See [CHANGELOG.md](CHANGELOG.md) for history.
 
-**Publishing:** To publish the npm packages (requires `NPM_TOKEN` in GitHub secrets), create a GitHub release; the [publish workflow](.github/workflows/publish.yml) builds and publishes the core and CLI packages. The VSCode extension can be packaged with `npm run package` in `packages/vscode-extension` and published to the [VS Code Marketplace](https://marketplace.visualstudio.com/) with `vsce publish` (requires a publisher account and token).
+**Publishing:** Create a GitHub Release to trigger the [publish workflow](.github/workflows/publish.yml). It runs tests and lint, then publishes `@tailwind-architect/shared`, `@tailwind-architect/core`, and `tailwind-architect` to npm via **Trusted Publishing (OIDC)** (no `NPM_TOKEN`). The VSCode extension is built and packaged; set `VSCE_TOKEN` in repo secrets to publish to the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 **Community:** After release, you can share the tool on Reddit (e.g. r/webdev), Twitter/X, or Product Hunt.
 

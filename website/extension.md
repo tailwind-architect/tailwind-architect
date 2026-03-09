@@ -1,6 +1,6 @@
 # VSCode / Cursor extension
 
-Install **Tailwind Architect** from the [VS Code Marketplace](https://marketplace.visualstudio.com/) (or install from the built `.vsix` in the repo).
+Install **Tailwind Architect** from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode) (or install from the built `.vsix` in the repo).
 
 ## Features
 
@@ -18,7 +18,10 @@ Install **Tailwind Architect** from the [VS Code Marketplace](https://marketplac
 
 ## Settings
 
-| Setting                                    | Type    | Default | Description                                        |
-| ------------------------------------------ | ------- | ------- | -------------------------------------------------- |
-| `tailwindArchitect.formatOnSave`           | boolean | `false` | Run fix on save for supported files.               |
-| `tailwindArchitect.diagnosticsAtSpanLevel` | boolean | `false` | One diagnostic per class span instead of per file. |
+| Setting                                      | Type    | Default | Description                                                                 |
+| -------------------------------------------- | ------- | ------- | --------------------------------------------------------------------------- |
+| `tailwindArchitect.formatOnSave`             | boolean | `false` | Run fix on save for supported files.                                        |
+| `tailwindArchitect.diagnosticsAtSpanLevel`   | boolean | `false` | One diagnostic per class span instead of per file.                           |
+| `tailwindArchitect.fixWorkspaceMaxFiles`     | number  | `5000`  | Max files to process when running Fix Workspace; `0` = no limit.            |
+
+Config is cached in memory and invalidated when you save `tailwind-architect.config.json`.
