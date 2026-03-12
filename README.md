@@ -6,7 +6,7 @@
 
 AST-first tooling for safe Tailwind class analysis and refactoring.
 
-**Docs:** [Guide](https://vitoriowingert.github.io/tailwind-architect/) (or run `website/` locally with VitePress).
+**Docs:** [Guide](https://tailwind-architect.github.io/tailwind-architect/) (or run `website/` locally with VitePress).
 
 ## Packages
 

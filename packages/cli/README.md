@@ -172,7 +172,7 @@ See the [core package](https://www.npmjs.com/package/@tailwind-architect/core) a
 ## Links
 
 - **Repository:** [tailwind-architect](https://github.com/vitoriowingert/tailwind-architect)
-- **Docs / guide:** [vitoriowingert.github.io/tailwind-architect](https://vitoriowingert.github.io/tailwind-architect/)
+- **Docs / guide:** [tailwind-architect.github.io/tailwind-architect](https://tailwind-architect.github.io/tailwind-architect/)
 - **VS Code / Cursor extension:** [Tailwind Architect](https://marketplace.visualstudio.com/items?itemName=vitoriowingert.tailwind-architect-vscode) — diagnostics, quick fix, “Fix Classes”, “Fix Workspace”, optional format on save
 - **Core API (npm):** [@tailwind-architect/core](https://www.npmjs.com/package/@tailwind-architect/core)
 

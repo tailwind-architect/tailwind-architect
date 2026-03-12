@@ -99,7 +99,7 @@ JS/TS/JSX/TSX (including `className` / `class` and class strings inside `classFu
 ## Links
 
 - **Repository:** [tailwind-architect](https://github.com/vitoriowingert/tailwind-architect)
-- **Docs:** [vitoriowingert.github.io/tailwind-architect](https://vitoriowingert.github.io/tailwind-architect/)
+- **Docs:** [tailwind-architect.github.io/tailwind-architect](https://tailwind-architect.github.io/tailwind-architect/)
 - **CLI:** [tailwind-architect](https://www.npmjs.com/package/tailwind-architect)
 - **Shared types:** [@tailwind-architect/shared](https://www.npmjs.com/package/@tailwind-architect/shared)
 

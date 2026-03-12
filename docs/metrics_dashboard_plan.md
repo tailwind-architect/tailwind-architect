@@ -59,7 +59,7 @@ https://`<username>`{=html}.github.io/`<repo>`{=html}/
 
 Example:
 
-https://username.github.io/tailwind-architect/
+https://tailwind-architect.github.io/tailwind-architect/
 
 ---
 
@@ -205,7 +205,7 @@ Add inside README.md
 
     Track growth here:
 
-    https://username.github.io/repository/metrics
+    https://tailwind-architect.github.io/tailwind-architect/metrics
 
 ---
 
@@ -287,7 +287,7 @@ Implement a metrics dashboard in the `/metrics` folder that:
 
 You will have a live public dashboard:
 
-username.github.io/repo/metrics
+tailwind-architect.github.io/tailwind-architect/metrics
 
 That shows:
 

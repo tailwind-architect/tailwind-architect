@@ -11,7 +11,7 @@ export default {
       { text: "Extension", link: "/extension" },
       {
         text: "GitHub",
-        link: "https://github.com/vitoriowingert/tailwind-architect"
+        link: "https://github.com/tailwind-architect/tailwind-architect"
       }
     ],
     sidebar: [

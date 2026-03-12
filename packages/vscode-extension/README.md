@@ -142,7 +142,7 @@ If the file is missing, the extension uses the defaults above.
 
 - **Repository:** [tailwind-architect](https://github.com/vitoriowingert/tailwind-architect)
 - **CLI (npm):** [tailwind-architect](https://www.npmjs.com/package/tailwind-architect)
-- **Docs:** [Guide](https://vitoriowingert.github.io/tailwind-architect/) (or `website/` in the repo)
+- **Docs:** [Guide](https://tailwind-architect.github.io/tailwind-architect/) (or `website/` in the repo)
 - **Core API:** [@tailwind-architect/core](https://www.npmjs.com/package/@tailwind-architect/core)
 
 ---
