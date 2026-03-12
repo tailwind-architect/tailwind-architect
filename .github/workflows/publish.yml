@@ -47,6 +47,9 @@ jobs:
         run: npm publish --workspace tailwind-architect --access public
 
   package-extension:
+    needs:
+      - publish-npm
+      - publish-github-packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,3 +85,45 @@ jobs:
           else
             echo "VSCE_TOKEN not set, skipping extension publish"
           fi
+
+  publish-github-packages:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Configure npm for GitHub Packages
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+
+      - name: Publish shared to GitHub Packages
+        run: npm publish --workspace @tailwind-architect/shared --access public --registry=https://npm.pkg.github.com
+
+      - name: Publish core to GitHub Packages
+        run: npm publish --workspace @tailwind-architect/core --access public --registry=https://npm.pkg.github.com
+
+      - name: Publish CLI to GitHub Packages
+        run: npm publish --workspace tailwind-architect --access public --registry=https://npm.pkg.github.com
