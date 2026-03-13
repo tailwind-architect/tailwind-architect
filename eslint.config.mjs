@@ -14,27 +14,12 @@ export default tseslint.config(
       "**/*.cjs",
       "**/fixtures/**",
       "website/.vitepress/cache/**",
-      "examples/**"
+      "examples/**",
+      "metrics/**"
     ]
-  },
-  // metrics/ is browser-only; define globals so lint passes in Node (CI) and when run explicitly
-  {
-    files: ["metrics/**/*.js"],
-    languageOptions: {
-      parserOptions: { ecmaVersion: "latest", sourceType: "script" },
-      globals: {
-        fetch: "readonly",
-        document: "readonly",
-        window: "readonly",
-        Chart: "readonly",
-        console: "readonly"
-      }
-    },
-    rules: { "no-undef": "off" }
   },
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs"],
-    ignores: ["metrics/**"],
     languageOptions: {
       parserOptions: {
         ecmaVersion: "latest",
