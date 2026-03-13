@@ -24,7 +24,7 @@ tailwind-architect <command> [path]
 
 ## Exit codes
 
-- **`lint`** — Exits with `1` when there are conflicts, redundancy, suggestions, duplicate patterns, or parse errors; otherwise `0`. Use in CI to fail the build. For GitHub Actions examples and JSON report details, see [CI usage](https://github.com/vitoriowingert/tailwind-architect/blob/main/docs/ci.md) in the repo.
+- **`lint`** — Exits with `1` when there are conflicts, redundancy, suggestions, duplicate patterns, or parse errors; otherwise `0`. Use in CI to fail the build. For GitHub Actions examples and JSON report details, see [CI usage](https://github.com/tailwind-architect/tailwind-architect/blob/main/docs/ci.md) in the repo.
 
 ## Examples
 

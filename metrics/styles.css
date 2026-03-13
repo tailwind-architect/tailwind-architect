@@ -1,0 +1,130 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --accent: #38bdf8;
+  --max-width: 960px;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.chart-section {
+  margin-bottom: 2.5rem;
+}
+
+.chart-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+}
+
+.footer {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.footer p {
+  margin: 0 0 0.5rem;
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}

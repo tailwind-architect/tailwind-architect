@@ -1,6 +1,6 @@
 # Tailwind Architect
 
-[![Build](https://github.com/vitoriowingert/tailwind-architect/actions/workflows/ci.yml/badge.svg)](https://github.com/vitoriowingert/tailwind-architect/actions/workflows/ci.yml)
+[![Build](https://github.com/tailwind-architect/tailwind-architect/actions/workflows/ci.yml/badge.svg)](https://github.com/tailwind-architect/tailwind-architect/actions/workflows/ci.yml)
 [![npm (scoped)](https://img.shields.io/npm/v/tailwind-architect.svg)](https://www.npmjs.com/package/tailwind-architect)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -89,3 +89,11 @@ Releases follow [Semantic Versioning](https://semver.org/). See [CHANGELOG.md](C
 **Community:** After release, you can share the tool on Reddit (e.g. r/webdev), Twitter/X, or Product Hunt.
 
 **Contributing:** See [CONTRIBUTING.md](CONTRIBUTING.md) for build, test, and plugin development. Demo content (e.g. “10 Tailwind mistakes this fixes”) and short videos help adoption.
+
+## Metrics
+
+Track NPM downloads, OpenVSX installs, and GitHub stars on the live dashboard:
+
+**https://tailwind-architect.github.io/tailwind-architect/**
+
+To enable it, configure GitHub Pages to deploy from the `main` branch with folder `/metrics`. See [docs/github-pages-metrics.md](docs/github-pages-metrics.md).

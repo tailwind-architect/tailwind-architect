@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.16] - 2025-03-12
+
+### Changed
+
+- Version bump 1.0.15 → 1.0.16 across packages (shared, core, cli, vscode-extension).
+- Repo references updated to organization `tailwind-architect`; growth metrics dashboard and docs.
+
 ## [1.0.8] - 2025-03-09
 
 ### Changed
