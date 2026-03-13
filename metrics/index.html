@@ -1,46 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tailwind Architect — Growth Metrics</title>
-  <link rel="stylesheet" href="./styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="./metrics.js" defer></script>
-</head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>Tailwind Architect</h1>
-      <p class="subtitle">Live growth metrics</p>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tailwind Architect — Growth Metrics</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./metrics.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Tailwind Architect</h1>
+        <p class="subtitle">Live growth metrics</p>
+      </header>
 
-    <section class="cards" aria-label="Key metrics">
-      <div class="card" aria-labelledby="npm-label">
-        <h2 id="npm-label">NPM Downloads</h2>
-        <p id="npmDownloads" class="metric-value" aria-live="polite">Loading…</p>
-      </div>
-      <div class="card" aria-labelledby="vsx-label">
-        <h2 id="vsx-label">OpenVSX Installs</h2>
-        <p id="vsxDownloads" class="metric-value" aria-live="polite">Loading…</p>
-      </div>
-      <div class="card" aria-labelledby="gh-label">
-        <h2 id="gh-label">GitHub Stars</h2>
-        <p id="githubStars" class="metric-value" aria-live="polite">Loading…</p>
-      </div>
-    </section>
+      <section class="cards" aria-label="Key metrics">
+        <div class="card" aria-labelledby="npm-label">
+          <h2 id="npm-label">NPM Downloads</h2>
+          <p id="npmDownloads" class="metric-value" aria-live="polite">
+            Loading…
+          </p>
+        </div>
+        <div class="card" aria-labelledby="vsx-label">
+          <h2 id="vsx-label">OpenVSX Installs</h2>
+          <p id="vsxDownloads" class="metric-value" aria-live="polite">
+            Loading…
+          </p>
+        </div>
+        <div class="card" aria-labelledby="gh-label">
+          <h2 id="gh-label">GitHub Stars</h2>
+          <p id="githubStars" class="metric-value" aria-live="polite">
+            Loading…
+          </p>
+        </div>
+      </section>
 
-    <section class="chart-section" aria-labelledby="chart-heading">
-      <h2 id="chart-heading">NPM Downloads Over Time</h2>
-      <div class="chart-container">
-        <canvas id="downloadsChart"></canvas>
-      </div>
-    </section>
+      <section class="chart-section" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">NPM Downloads Over Time</h2>
+        <div class="chart-container">
+          <canvas id="downloadsChart"></canvas>
+        </div>
+      </section>
 
-    <footer class="footer">
-      <p>Metrics are fetched live from public APIs (NPM, OpenVSX, GitHub). No backend required.</p>
-      <p><a href="https://github.com/tailwind-architect/tailwind-architect">View on GitHub</a></p>
-    </footer>
-  </div>
-</body>
+      <footer class="footer">
+        <p>
+          Metrics are fetched live from public APIs (NPM, OpenVSX, GitHub). No
+          backend required.
+        </p>
+        <p>
+          <a href="https://github.com/tailwind-architect/tailwind-architect"
+            >View on GitHub</a
+          >
+        </p>
+      </footer>
+    </div>
+  </body>
 </html>

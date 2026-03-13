@@ -18,7 +18,8 @@
   async function fetchNpmDownloadsPoint() {
     try {
       const res = await fetch(
-        "https://api.npmjs.org/downloads/point/last-week/" + encodeURIComponent(npmPackage)
+        "https://api.npmjs.org/downloads/point/last-week/" +
+          encodeURIComponent(npmPackage)
       );
       if (!res.ok) throw new Error("NPM API " + res.status);
       const data = await res.json();
@@ -59,7 +60,7 @@
       const data = await res.json();
       return {
         stargazers_count: data.stargazers_count,
-        forks_count: data.forks_count,
+        forks_count: data.forks_count
       };
     } catch (e) {
       console.error("fetchGithubRepoStats:", e);
@@ -73,7 +74,7 @@
     start.setDate(start.getDate() - days);
     return {
       startDate: start.toISOString().slice(0, 10),
-      endDate: end.toISOString().slice(0, 10),
+      endDate: end.toISOString().slice(0, 10)
     };
   }
 
@@ -91,7 +92,8 @@
       if (!res.ok) throw new Error("NPM range API " + res.status);
       const data = await res.json();
       const downloads = data.downloads;
-      if (!Array.isArray(downloads) || downloads.length === 0) return { labels: [], values: [] };
+      if (!Array.isArray(downloads) || downloads.length === 0)
+        return { labels: [], values: [] };
       const labels = downloads.map(function (d) {
         return d.day;
       });
@@ -109,7 +111,8 @@
     const el = document.getElementById("npmDownloads");
     if (!el) return;
     if (npmPointData && npmPointData.downloads != null) {
-      el.textContent = formatNumber(npmPointData.downloads) + " downloads in the last 7 days";
+      el.textContent =
+        formatNumber(npmPointData.downloads) + " downloads in the last 7 days";
     } else {
       el.textContent = "Unavailable";
     }
@@ -119,7 +122,8 @@
     const el = document.getElementById("vsxDownloads");
     if (!el) return;
     if (vsxData && typeof vsxData.downloadCount === "number") {
-      el.textContent = formatNumber(vsxData.downloadCount) + " installs on OpenVSX";
+      el.textContent =
+        formatNumber(vsxData.downloadCount) + " installs on OpenVSX";
     } else {
       el.textContent = "Unavailable";
     }
@@ -148,7 +152,11 @@
         ctx.font = "14px system-ui, sans-serif";
         ctx.fillStyle = "#94a3b8";
         ctx.textAlign = "center";
-        ctx.fillText("No download data available", canvas.width / 2, canvas.height / 2);
+        ctx.fillText(
+          "No download data available",
+          canvas.width / 2,
+          canvas.height / 2
+        );
       }
       return;
     }
@@ -163,28 +171,28 @@
             borderColor: "#38bdf8",
             backgroundColor: "rgba(56, 189, 248, 0.1)",
             fill: true,
-            tension: 0.2,
-          },
-        ],
+            tension: 0.2
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: true,
         plugins: {
-          legend: { display: false },
+          legend: { display: false }
         },
         scales: {
           x: {
             grid: { color: "rgba(148, 163, 184, 0.15)" },
-            ticks: { color: "#94a3b8", maxTicksLimit: 10 },
+            ticks: { color: "#94a3b8", maxTicksLimit: 10 }
           },
           y: {
             grid: { color: "rgba(148, 163, 184, 0.15)" },
             ticks: { color: "#94a3b8" },
-            beginAtZero: true,
-          },
-        },
-      },
+            beginAtZero: true
+          }
+        }
+      }
     });
   }
 
@@ -192,7 +200,7 @@
     const [npmPoint, vsxData, ghData] = await Promise.all([
       fetchNpmDownloadsPoint(),
       fetchOpenVSXDownloads(),
-      fetchGithubRepoStats(),
+      fetchGithubRepoStats()
     ]);
     renderNpmSummary(npmPoint);
     renderOpenVSXSummary(vsxData);
