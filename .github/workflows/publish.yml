@@ -81,7 +81,9 @@ jobs:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
         run: |
           if [ -n "$VSCE_TOKEN" ]; then
-            cd packages/vscode-extension && vsce publish --pat "$VSCE_TOKEN"
+            cd packages/vscode-extension
+            VSIX_FILE=$(ls -1 tailwind-architect-vscode-*.vsix | head -n 1)
+            vsce publish --pat "$VSCE_TOKEN" --packagePath "$VSIX_FILE"
           else
             echo "VSCE_TOKEN not set, skipping extension publish"
           fi
