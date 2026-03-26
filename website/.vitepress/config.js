@@ -9,7 +9,7 @@ export default {
       { text: "CLI", link: "/cli" },
       { text: "Configuration", link: "/configuration" },
       { text: "Extension", link: "/extension" },
-      { text: "Metrics", link: "/metrics/" },
+      { text: "Metrics", link: "/metrics" },
       {
         text: "GitHub",
         link: "https://github.com/tailwind-architect/tailwind-architect"
@@ -21,6 +21,7 @@ export default {
       { text: "CLI reference", link: "/cli" },
       { text: "Configuration", link: "/configuration" },
       { text: "VSCode extension", link: "/extension" },
+      { text: "Metrics", link: "/metrics" },
       { text: "Compatibility", link: "/compatibility" },
       { text: "Troubleshooting", link: "/troubleshooting" }
     ]
