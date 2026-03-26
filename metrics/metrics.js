@@ -7,6 +7,7 @@
   const githubOwner = "tailwind-architect";
   const githubRepo = "tailwind-architect";
   const NPM_HISTORY_DAYS = 180;
+  const NPM_TOTAL_START_DATE = "2015-01-10";
 
   let chartInstance = null;
 
@@ -107,12 +108,50 @@
     }
   }
 
+  async function fetchNpmTotalDownloads() {
+    try {
+      const endDate = new Date().toISOString().slice(0, 10);
+      const res = await fetch(
+        "https://api.npmjs.org/downloads/range/" +
+          NPM_TOTAL_START_DATE +
+          ":" +
+          endDate +
+          "/" +
+          encodeURIComponent(npmPackage)
+      );
+      if (!res.ok) throw new Error("NPM total range API " + res.status);
+      const data = await res.json();
+      const downloads = data.downloads;
+      if (!Array.isArray(downloads) || downloads.length === 0) return null;
+      const total = downloads.reduce(function (sum, point) {
+        const count =
+          point && typeof point.downloads === "number" ? point.downloads : 0;
+        return sum + count;
+      }, 0);
+      return Number.isFinite(total) ? { downloads: total } : null;
+    } catch (e) {
+      console.error("fetchNpmTotalDownloads:", e);
+      return null;
+    }
+  }
+
   function renderNpmSummary(npmPointData) {
     const el = document.getElementById("npmDownloads");
     if (!el) return;
     if (npmPointData && npmPointData.downloads != null) {
       el.textContent =
         formatNumber(npmPointData.downloads) + " downloads in the last 7 days";
+    } else {
+      el.textContent = "Unavailable";
+    }
+  }
+
+  function renderNpmTotalSummary(npmTotalData) {
+    const el = document.getElementById("npmDownloadsTotal");
+    if (!el) return;
+    if (npmTotalData && typeof npmTotalData.downloads === "number") {
+      el.textContent =
+        formatNumber(npmTotalData.downloads) + " all-time downloads";
     } else {
       el.textContent = "Unavailable";
     }
@@ -197,12 +236,14 @@
   }
 
   async function loadMetrics() {
-    const [npmPoint, vsxData, ghData] = await Promise.all([
+    const [npmPoint, npmTotal, vsxData, ghData] = await Promise.all([
       fetchNpmDownloadsPoint(),
+      fetchNpmTotalDownloads(),
       fetchOpenVSXDownloads(),
       fetchGithubRepoStats()
     ]);
     renderNpmSummary(npmPoint);
+    renderNpmTotalSummary(npmTotal);
     renderOpenVSXSummary(vsxData);
     renderGithubSummary(ghData);
   }

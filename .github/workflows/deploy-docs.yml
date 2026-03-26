@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "website/**"
+      - "metrics/**"
       - ".github/workflows/deploy-docs.yml"
   workflow_dispatch:
 
@@ -37,6 +38,9 @@ jobs:
 
       - name: Build docs
         run: cd website && npm run build
+
+      - name: Include metrics dashboard
+        run: mkdir -p website/.vitepress/dist/metrics && cp -R metrics/. website/.vitepress/dist/metrics/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
